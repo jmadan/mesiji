@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:orientation="horizontal"
+                android:padding="5dip">
+
+    <LinearLayout
+            android:id="@+id/msg_thumbnail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="3dip"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="5dip">
+
+
+        <ImageView
+                android:id="@+id/msg_image"
+                android:layout_width="25dip"
+                android:layout_height="25dip"
+                android:src="@drawable/bubbles3"/>
+
+    </LinearLayout>
+
+    <TextView
+            style="@style/ListText"
+            android:id="@+id/msg_title"
+            android:layout_toRightOf="@+id/msg_thumbnail"
+            android:layout_alignTop="@+id/msg_thumbnail"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:textColor="@color/text_heading" />
+
+
+</RelativeLayout><!-- From: /Users/jmadan/development/SerendipProject/Serendip/src/main/res/layout/message_custom_row.xml -->

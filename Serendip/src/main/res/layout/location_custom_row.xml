@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:orientation="horizontal"
+                android:padding="5dip">
+
+    <LinearLayout
+            android:id="@+id/thumbnail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="3dip"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="5dip">
+
+
+        <ImageView
+                android:id="@+id/loc_image"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:src="@drawable/location_4_icon"/>
+
+    </LinearLayout>
+
+    <TextView
+            android:id="@+id/loc_name"
+            android:layout_toRightOf="@+id/thumbnail"
+            android:layout_alignTop="@+id/thumbnail"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textColor="@color/text_heading"
+            android:typeface="sans"
+            android:textSize="12dip"
+            android:textStyle="bold"/>
+
+    <TextView
+            android:id="@+id/loc_street"
+            android:layout_toRightOf="@+id/thumbnail"
+            android:layout_below="@+id/loc_name"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="10dip"
+            android:layout_margin="2dip"/>
+
+
+</RelativeLayout>
+

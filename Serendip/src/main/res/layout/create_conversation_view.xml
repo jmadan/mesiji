@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="54dp"
+            android:text="@string/create_conversation_heading"
+            android:id="@+id/con_heading"
+            android:layout_gravity="center"
+            android:textColor="@color/text_heading"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            android:textSize="20dp"
+            android:gravity="center"/>
+
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="44dp"
+            android:text="@string/create_conversation_small_heading"
+            android:id="@+id/con_subheading"
+            android:layout_gravity="center"
+            android:textColor="@color/text_heading"
+            android:textStyle="normal"
+            android:typeface="monospace"
+            android:textSize="16dp"
+            android:gravity="center"/>
+
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/conversation_title"
+            android:layout_gravity="center"
+            android:hint="Catchy Title"
+            android:gravity="center"/>
+
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="225dp"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/message"
+            android:layout_gravity="center"
+            android:hint="Say whats on your Mind!"
+            android:gravity="left"/>
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save Conversation"
+            android:id="@+id/save_conversation"
+            android:layout_gravity="center"
+            android:onClick="createConversation"/>
+
+</LinearLayout>

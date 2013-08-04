@@ -29,48 +29,18 @@
                 qualifiers=""
                 type="drawable" />
             <file
-                name="actionsearch"
-                path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/actionsearch.png"
-                qualifiers=""
-                type="drawable" />
-            <file
-                name="arrowhead_right"
-                path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/arrowhead_right.png"
-                qualifiers=""
-                type="drawable" />
-            <file
                 name="bubbles3"
                 path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/bubbles3.png"
                 qualifiers=""
                 type="drawable" />
             <file
-                name="checkmark"
-                path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/checkmark.png"
-                qualifiers=""
-                type="drawable" />
-            <file
-                name="close"
-                path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/close.png"
+                name="chat"
+                path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/chat.png"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="gear"
                 path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/gear.png"
-                qualifiers=""
-                type="drawable" />
-            <file
-                name="group"
-                path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/group.png"
-                qualifiers=""
-                type="drawable" />
-            <file
-                name="lightbulb_off"
-                path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/lightbulb_off.png"
-                qualifiers=""
-                type="drawable" />
-            <file
-                name="list2"
-                path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/list2.png"
                 qualifiers=""
                 type="drawable" />
             <file
@@ -84,8 +54,8 @@
                 qualifiers=""
                 type="drawable" />
             <file
-                name="location_place"
-                path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/location_place.png"
+                name="magnify"
+                path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/magnify.png"
                 qualifiers=""
                 type="drawable" />
             <file
@@ -104,23 +74,23 @@
                 qualifiers=""
                 type="drawable" />
             <file
+                name="redo"
+                path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/redo.png"
+                qualifiers=""
+                type="drawable" />
+            <file
                 name="refresh"
                 path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/refresh.png"
                 qualifiers=""
                 type="drawable" />
             <file
-                name="reload"
-                path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/reload.png"
+                name="sign_out"
+                path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/sign_out.png"
                 qualifiers=""
                 type="drawable" />
             <file
                 name="socialchat"
                 path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/socialchat.png"
-                qualifiers=""
-                type="drawable" />
-            <file
-                name="speech_balloon"
-                path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/speech_balloon.png"
                 qualifiers=""
                 type="drawable" />
             <file
@@ -131,11 +101,6 @@
             <file
                 name="startup"
                 path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/startup.jpg"
-                qualifiers=""
-                type="drawable" />
-            <file
-                name="zoom"
-                path="/Users/jmadan/development/SerendipProject/Serendip/src/main/res/drawable/zoom.png"
                 qualifiers=""
                 type="drawable" />
             <file
@@ -369,6 +334,23 @@ monospace
                 </style>
 
                 <style
+                    name="ListText"
+                    parent="@android:style/TextAppearance" >
+                    <item name="android:textSize">
+15dip
+                    </item>
+                    <item name="android:textColor">
+@color/text_list
+                    </item>
+                    <item name="android:textStyle">
+italic
+                    </item>
+                    <item name="android:typeface">
+monospace
+                    </item>
+                </style>
+
+                <style
                     name="ButtonStyle"
                     parent="@android:style/TextAppearance.Medium" >
                     <item name="android:layout_width">
@@ -390,33 +372,16 @@ monospace
 center
                     </item>
                     <item name="android:layout_marginRight">
-10dp
+5dp
                     </item>
                     <item name="android:layout_marginTop">
-10dp
+5dp
                     </item>
                     <item name="android:layout_marginLeft">
-10dp
+5dp
                     </item>
                     <item name="android:layout_marginBottom">
-10dp
-                    </item>
-                </style>
-
-                <style
-                    name="ListText"
-                    parent="@android:style/TextAppearance" >
-                    <item name="android:textSize">
-15dip
-                    </item>
-                    <item name="android:textColor">
-@color/text_list
-                    </item>
-                    <item name="android:textStyle">
-italic
-                    </item>
-                    <item name="android:typeface">
-monospace
+5dp
                     </item>
                 </style>
 
@@ -436,19 +401,19 @@ wrap_content
 monospace
                     </item>
                     <item name="android:gravity">
-center
+left
                     </item>
                     <item name="android:layout_marginRight">
-10dp
+5dp
                     </item>
                     <item name="android:layout_marginTop">
-10dp
+5dp
                     </item>
                     <item name="android:layout_marginLeft">
-10dp
+5dp
                     </item>
                     <item name="android:layout_marginBottom">
-10dp
+5dp
                     </item>
                 </style>
             </file>
@@ -486,6 +451,8 @@ center
                 <string name="app_name" >Serendip
                 </string>
                 <string name="name_text" >Name
+                </string>
+                <string name="signout" >signout
                 </string>
                 <string name="refresh" >refresh
                 </string>

@@ -7,25 +7,32 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.PersistentCookieStore;
 import com.thirtysix.serendip.AlertDialogManager;
 import com.thirtysix.serendip.Constants;
 import com.thirtysix.serendip.LocationAdaptor;
 import com.thirtysix.serendip.MesijiClient;
 import com.thirtysix.serendip.model.LocationDetails;
+import com.thirtysix.serendip.model.User;
 import com.thirtysix.serendip.model.Venue;
 import com.thirtysix.serendip.R;
 
@@ -34,14 +41,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LocationActivity extends Activity {
+
     LocationManager locationManager;
     AlertDialogManager alert;
+    AsyncHttpClient mesijiClient = new AsyncHttpClient();
+    PersistentCookieStore mesijiCookieStore;
+    User mesijiUser;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main_action_bar, menu);
-        getMenuInflater().inflate(R.menu.default_menu, menu);
+        getMenuInflater().inflate(R.menu.default_menu, menu); // Inflate the menu; this adds items to the action bar if it is present.
         return true;
     }
 
@@ -49,7 +58,13 @@ public class LocationActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.location_list_view);
-
+        ActionBar bar = getActionBar();
+        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#006868")));
+        Intent intent = getIntent();
+        Bundle b = intent.getExtras();
+        mesijiUser = b.getParcelable("user");
+        Log.e(Constants.LOG, mesijiUser.getEmail().toString()+" I am in LocationActivity");
+        mesijiCookieStore = new PersistentCookieStore(getApplicationContext());
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         final ListView LOCATION_LIST_VIEW = (ListView) findViewById(R.id.location_list);
         String latlng = getLatLng();
@@ -71,27 +86,35 @@ public class LocationActivity extends Activity {
                             int lIndex = LOCATION_LIST.indexOf(v);
                             v.setLocationDetails(LOCATION_LIST.get(lIndex).locationDetails);
                             b.putParcelable("venueObj", v);
+                            b.putParcelable("user", mesijiUser);
                             intent.putExtras(b);
                             startActivity(intent);
                         }
                     });
                 }
             });
-//            LocationAdaptor adapter = new LocationAdaptor(LOCATION_LIST, getApplicationContext());
-////            LazyAdaptor lazyAdaptor = new LazyAdaptor(this, LOCATION_LIST);
-//            LOCATION_LIST_VIEW.setAdapter(adapter);
-//            LOCATION_LIST_VIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//                @Override
-//                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                    alert.showAlertDialog(getApplicationContext(), "Got Clicked", "I am on Click");
-//                }
-//
-//            });
         } else {
             alert.showAlertDialog(getApplicationContext(), "Location Error", "Could not determine Venue...Please try again.");
             Log.e(Constants.LOG, "Could not determine Venue...Please try again.");
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.signout:
+                logoutUser();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void logoutUser() {
+
+        System.out.println("LOGGING OUT.......OR TRYING......");
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     private void GetLocations(String response, ArrayList<Venue> locs) {

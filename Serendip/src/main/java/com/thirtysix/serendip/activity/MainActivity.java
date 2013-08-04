@@ -1,8 +1,11 @@
 package com.thirtysix.serendip.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -55,6 +57,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startup);
+        ActionBar bar = getActionBar();
+        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#006868")));
         mesijiCookieStore = new PersistentCookieStore(getApplicationContext());
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         final boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -70,8 +74,9 @@ public class MainActivity extends Activity {
                     Log.e(Constants.LOG, c.getName());
                     try {
                         JSONObject userJson = new JSONObject(c.getValue());
-                        System.out.println(userJson.toString());
-                        mesijiUser = new User(userJson.getString("email"),userJson.getString("handle"), userJson.getString("userid"),userJson.getInt("uid"));
+                        System.out.println("userJson: "+userJson.toString());
+                        mesijiUser = User.getUserFromJson(userJson);
+//                        mesijiUser = new User(userJson.getString("_id"), userJson.getInt("userid"), userJson.getString("name"), userJson.getString("email"),userJson.getString("handle"));
                         UserAlreadyLoggedIn(mesijiUser);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -82,10 +87,11 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void UserAlreadyLoggedIn(User mesijiUser) {
+    private void UserAlreadyLoggedIn(User user) {
+        Log.e(Constants.LOG, user.toString());
         final Intent intent = new Intent(this, LocationActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putParcelable("user", mesijiUser);
+        bundle.putParcelable("user", user);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -93,18 +99,30 @@ public class MainActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.default_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Toast.makeText(this, "menu>>>>>>>>>>>>>>>>>>" + item.getTitle().toString(), Toast.LENGTH_SHORT).show();
-        return true;
+        switch (item.getItemId()) {
+            case R.id.signout:
+                logoutUser();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void logoutUser() {
+        mesijiCookieStore.clear();
+        System.out.println("LOGGING OUT.......OR TRYING......");
+        finish();
+        startActivity(getIntent());
     }
 
     public void loginUser(View view) {
-        Context context = getApplicationContext();
+//        Context context = getApplicationContext();
         EditText userEmail = (EditText) findViewById(R.id.email_text);
         EditText userPass = (EditText) findViewById(R.id.password_text);
         JSONObject jsonObject = new JSONObject();
@@ -124,6 +142,7 @@ public class MainActivity extends Activity {
         }
 
         mesijiClient.setCookieStore(mesijiCookieStore);
+        final User[] u = {null};
 
         final Intent intent = new Intent(this, LocationActivity.class);
         MesijiClient.post(getBaseContext(), "/auth/login", se, "application/json", new AsyncHttpResponseHandler() {
@@ -132,27 +151,25 @@ public class MainActivity extends Activity {
             public void onSuccess(String response) {
                 try {
                     JSONObject res = new JSONObject(response);
-                    if (res.get("uid").toString().equals("0")) {
+                    if (res.get("userid").toString().equals("0")) {
 //                        Toast toast = Toast.makeText(getBaseContext(), "Invalid Username/Password combination", 3000);
 //                        toast.show();
                         alert = new AlertDialogManager(getApplicationContext());
                         alert.showAlertDialog(MainActivity.this, "Login failed...", "Username/Password is incorrect");
                     } else {
+                        u[0] = User.getUserFromJson(res);
                         BasicClientCookie mesijiCookie = new BasicClientCookie("mesiji.userInfo", res.toString());
                         mesijiCookie.setDomain("msgstory.com");
                         mesijiCookie.setPath("/");
                         mesijiCookie.setVersion(1);
                         mesijiCookieStore.addCookie(mesijiCookie);
-                        Log.e(Constants.LOG, res.get("uid").toString());
-
+                        UserAlreadyLoggedIn(u[0]);
                     }
-                    System.out.println(res);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         });
-        startActivity(intent);
     }
 
     public void registerForm(View view) {

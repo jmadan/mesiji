@@ -1,15 +1,18 @@
 package com.thirtysix.serendip.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -19,6 +22,7 @@ import com.thirtysix.serendip.ConversationAdaptor;
 import com.thirtysix.serendip.MesijiClient;
 import com.thirtysix.serendip.R;
 import com.thirtysix.serendip.model.Conversation;
+import com.thirtysix.serendip.model.User;
 import com.thirtysix.serendip.model.Venue;
 
 import org.apache.http.entity.StringEntity;
@@ -38,14 +42,26 @@ public class ConversationActivity extends Activity {
 
     Venue atVenue;
     AlertDialogManager alert;
+    User mesijiuser;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.conversation_menu, menu);
+        return true;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.conversation_list_view);
+        ActionBar bar = getActionBar();
+        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#006868")));
+
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         atVenue = b.getParcelable("venueObj");
+        mesijiuser = b.getParcelable("user");
         final ArrayList<Conversation> CHATTER = new ArrayList<Conversation>();
         if (atVenue.id.isEmpty()) {
             alert.showAlertDialog(getApplicationContext(), "Location Error", "Somehow we lost the location you selected! ");
@@ -76,6 +92,7 @@ public class ConversationActivity extends Activity {
 //                                b.putParcelableArrayList("cons", CHATTER);
                                 b.putString("conversation_title", selectedConversation.getTitle());
                                 b.putString("conversation_id", selectedConversation.getId());
+                                b.putParcelable("user", mesijiuser);
                                 intent.putExtras(b);
                                 startActivity(intent);
                             }
@@ -93,13 +110,13 @@ public class ConversationActivity extends Activity {
         EditText msg = (EditText) findViewById(R.id.message);
 
         JSONObject jsonConversationObject = new JSONObject();
-        JSONObject jsonMessageObject = new JSONObject();
+        final JSONObject jsonMessageObject = new JSONObject();
         JSONObject jsonVenueObject = new JSONObject();
         JSONArray jsonMessagesObject = new JSONArray();
         try {
             //Message JSON Object
             jsonMessageObject.put("msg_text", msg.getText().toString());
-            jsonMessageObject.put("user_id", "someid");
+            jsonMessageObject.put("user_id", mesijiuser.get_id().toString());
             jsonMessagesObject.put(jsonMessageObject);
 
             //Venue JSON Object
@@ -112,7 +129,7 @@ public class ConversationActivity extends Activity {
             jsonConversationObject.put("title", con_title.getText().toString());
 //            jsonConversationObject.put("messages", jsonMessagesObject);
             jsonConversationObject.put("venue", jsonVenueObject);
-            jsonConversationObject.put("creator", "someid");
+            jsonConversationObject.put("creator", mesijiuser.get_id());
             jsonConversationObject.put("is_approved", true);
         } catch (Exception e) {
             Log.e(Constants.LOG, e.toString());
@@ -121,7 +138,7 @@ public class ConversationActivity extends Activity {
         RequestParams params = new RequestParams();
         Log.e(Constants.LOG, jsonConversationObject.toString());
         params.put("conversation", jsonConversationObject.toString());
-        params.put("message", jsonMessageObject.toString());
+//        params.put("message", jsonMessageObject.toString());
         Log.e(Constants.LOG, params.toString());
         StringEntity se = null;
         try{
@@ -139,13 +156,16 @@ public class ConversationActivity extends Activity {
                     JSONObject res = new JSONObject(response);
                     Log.e(Constants.LOG, "json object of response: "+ res.toString());
                     if (res.getJSONObject("data").getString("status").toString().equals("201")) {
-                        Intent intent = new Intent(getApplicationContext(), ConversationActivity.class);
-                        Bundle b = new Bundle();
-                        b.putParcelable("venueObj", atVenue);
-                        intent.putExtras(b);
-                        startActivity(intent);
+                        if (SaveMessage(jsonMessageObject, res.getJSONObject("data").getJSONObject("json_data").getString("_id").toString())) {
+                            finish();
+                            startActivity(getIntent());
+                        }
+//                        Intent intent = new Intent(getApplicationContext(), ConversationActivity.class);
+//                        Bundle b = new Bundle();
+//                        b.putParcelable("venueObj", atVenue);
+//                        intent.putExtras(b);
                     } else {
-                        Log.e(Constants.LOG, res.getJSONObject("data").getString("error_msg").toString());
+                        Log.e(Constants.LOG, ">>>>>>>>>>>>>>>"+res.getJSONObject("data").getString("error_msg").toString());
 //                        startActivity(intent);
                     }
                     System.out.println(res);
@@ -154,6 +174,42 @@ public class ConversationActivity extends Activity {
                 }
             }
         });
+    }
+
+    private boolean SaveMessage(JSONObject jsonMsg, String con_id){
+        final boolean[] status = new boolean[1];
+        status[0]=true;
+        RequestParams params = new RequestParams();
+        params.put("message", jsonMsg.toString());
+        Log.e(Constants.LOG, params.toString());
+        StringEntity se = null;
+        try{
+            se = new StringEntity(params.toString());
+        }catch (UnsupportedEncodingException e){
+            e.printStackTrace();
+        }
+
+        MesijiClient.post(getBaseContext(), "/message/conversation/"+con_id, se, "application/json", new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(String response) {
+                status[0]=true;
+                Log.e(Constants.LOG, "response: " + response);
+                try {
+                    JSONObject res = new JSONObject(response);
+                    Log.e(Constants.LOG, "json object of response: "+ res.toString());
+                    if (!res.getJSONObject("data").getString("status").toString().equals("201")) {
+                        status[0] = false;
+                        Log.e(Constants.LOG, ">>>>>>>>>>>>>>>"+res.getJSONObject("data").getString("error_msg").toString());
+                    }
+                    System.out.println(res);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        return status[0];
     }
 
     private void GetConversations(String response, ArrayList<Conversation> chatter) {

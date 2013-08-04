@@ -6,6 +6,7 @@
 *.exe
 *.o
 *.so
+*.iml
 
 # Packages #
 ############
@@ -37,3 +38,5 @@ ehthumbs.db
 Thumbs.db
 .gradle/
 .idea/
+Serendip/*.iml
+Serendip/build/*

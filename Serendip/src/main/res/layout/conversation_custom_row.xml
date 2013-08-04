@@ -23,6 +23,7 @@
     </LinearLayout>
 
     <TextView style="@style/TextViewStyle"
+              android:layout_width="wrap_content"
               android:id="@+id/cTitle"
               android:layout_toRightOf="@+id/con_thumbnail"
               android:textColor="@color/text_heading"
@@ -31,7 +32,7 @@
     <ImageView
             android:id="@+id/starconvo"
             android:src="@drawable/star"
-            android:layout_marginLeft="25dip"
+            android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/cTitle"
             android:layout_alignTop="@+id/con_thumbnail"
             android:layout_height="25dp"

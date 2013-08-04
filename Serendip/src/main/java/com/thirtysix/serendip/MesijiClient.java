@@ -25,6 +25,7 @@ public class MesijiClient {
   }
 
   public static void post(Context context, String url, StringEntity stringEntity, String contentType, AsyncHttpResponseHandler responseHandler){
+      System.out.println(">>>>>>>>>>>>>>"+url);
       client.post(context, getAbsoluteUrl(url), stringEntity, contentType, responseHandler);
   }
 

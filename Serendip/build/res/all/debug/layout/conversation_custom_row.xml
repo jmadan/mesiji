@@ -16,32 +16,27 @@
 
         <ImageView
                 android:id="@+id/loc_image"
-                android:layout_width="30dip"
-                android:layout_height="30dip"
+                android:layout_width="25dip"
+                android:layout_height="25dip"
                 android:src="@drawable/megaphone_icon"/>
 
     </LinearLayout>
 
-    <TextView
-            android:id="@+id/cTitle"
-            android:layout_toRightOf="@+id/con_thumbnail"
-            android:layout_centerVertical="true"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:textColor="@color/text_heading"
-            android:typeface="sans"
-            android:textSize="17dip"
-            android:ellipsize="end"
-            android:textStyle="bold"/>
+    <TextView style="@style/TextViewStyle"
+              android:layout_width="wrap_content"
+              android:id="@+id/cTitle"
+              android:layout_toRightOf="@+id/con_thumbnail"
+              android:textColor="@color/text_heading"
+              android:ellipsize="end" />
 
     <ImageView
             android:id="@+id/starconvo"
             android:src="@drawable/star"
-            android:layout_marginLeft="25dip"
+            android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/cTitle"
             android:layout_alignTop="@+id/con_thumbnail"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_width="25dp"
             />
 
 </RelativeLayout><!-- From: /Users/jmadan/development/SerendipProject/Serendip/src/main/res/layout/conversation_custom_row.xml -->

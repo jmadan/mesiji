@@ -24,5 +24,6 @@
 
     //Menu Items
     <string name="refresh">refresh</string>
+    <string name="signout">signout</string>
 
 </resources>

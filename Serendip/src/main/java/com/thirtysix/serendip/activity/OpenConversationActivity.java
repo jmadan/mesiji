@@ -1,7 +1,11 @@
 package com.thirtysix.serendip.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +24,7 @@ import com.thirtysix.serendip.MessageAdaptor;
 import com.thirtysix.serendip.R;
 import com.thirtysix.serendip.model.Conversation;
 import com.thirtysix.serendip.model.Message;
+import com.thirtysix.serendip.model.User;
 
 import org.apache.http.entity.StringEntity;
 import org.json.JSONArray;
@@ -39,6 +44,7 @@ public class OpenConversationActivity extends Activity {
     String con_id = null;
     String con_title = null;
     ArrayList<Message> message_list = new ArrayList<Message>();
+    User mesijiUser;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -50,15 +56,18 @@ public class OpenConversationActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.conversation_detail_view);
+        ActionBar bar = getActionBar();
+        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#006868")));
         Intent intent = getIntent();
-        if (!intent.hasExtra("conversation_id")) {
+        Bundle b = intent.getExtras();
+        if (b.isEmpty()) {
             Log.e(Constants.LOG, "Selected Conversation is missing");
             Intent homeIntent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(homeIntent);
         } else {
-            Bundle bundle = intent.getExtras();
-            con_id = bundle.getString("conversation_id");
-            con_title = bundle.getString("conversation_title");
+            con_id = b.getString("conversation_id");
+            con_title = b.getString("conversation_title");
+            mesijiUser = b.getParcelable("user");
             TextView conTitle = (TextView) findViewById(R.id.con_title);
             conTitle.setText(con_title.trim());
             final ListView MESSAGE_LIST_VIEW = (ListView) findViewById(R.id.messages_list);
@@ -133,7 +142,7 @@ public class OpenConversationActivity extends Activity {
         try {
             //Message JSON Object
             jsonMessageObject.put("msg_text", msg_text.getText().toString());
-            jsonMessageObject.put("user_id", "someid");
+            jsonMessageObject.put("user_id", mesijiUser.get_id());
             jsonMessagesObject.put(jsonMessageObject);
         } catch (Exception e) {
             Log.e(Constants.LOG, e.toString());

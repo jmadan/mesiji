@@ -9,13 +9,19 @@
           android:icon="@drawable/gear"/>
 
     <item android:id="@+id/search"
-          android:icon="@drawable/zoom"
+          android:icon="@drawable/magnify"
           android:showAsAction="always"
           />
 
     <item android:id="@+id/refresh"
             android:title="@string/refresh"
-            android:icon="@drawable/reload"
+            android:icon="@drawable/refresh"
             android:showAsAction="always" />
+
+    <item android:id="@+id/signout"
+          android:title="@string/signout"
+          android:icon="@drawable/sign_out"
+          android:showAsAction="always" />
+
 
 </menu>

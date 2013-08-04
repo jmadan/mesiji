@@ -22,7 +22,7 @@
     <string name="conversation_title">Conversation title</string>
     <string name="save_message_heading">Speak your mind!</string>
 
-    //Menu Items
+    <!--Menu Items-->
     <string name="refresh">refresh</string>
     <string name="signout">signout</string>
 

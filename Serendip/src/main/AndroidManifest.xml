@@ -36,6 +36,14 @@
             </intent-filter>
         </activity>
         <activity
+                android:name=".activity.LoginActivity"
+                android:label="@string/title_activity_home"
+                android:parentActivityName="com.thirtysix.serendip.MainActivity" >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.thirtysix.serendip.MainActivity" />
+        </activity>
+        <activity
                 android:name=".activity.LocationActivity"
                 android:label="@string/title_activity_home"
                 android:parentActivityName="com.thirtysix.serendip.MainActivity" >

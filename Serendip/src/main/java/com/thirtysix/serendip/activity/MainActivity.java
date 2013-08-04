@@ -43,52 +43,32 @@ public class MainActivity extends Activity {
     User mesijiUser;
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e(Constants.LOG, "Resumed");
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.startup);
         ActionBar bar = getActionBar();
-        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#006868")));
+        bar.hide();
         mesijiCookieStore = new PersistentCookieStore(getApplicationContext());
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        final boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        final boolean wifiEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        if (!gpsEnabled && !wifiEnabled) {
-            Log.e(Constants.LOG, "Network is not available");
-            setContentView(R.layout.no_network);
-        } else {
-            List<Cookie> cookies = mesijiCookieStore.getCookies();
-            Log.e(Constants.LOG, String.valueOf(cookies.size()));
-            for (Cookie c : cookies) {
-                if (c.getName().equals("mesiji.userInfo")) {
-                    Log.e(Constants.LOG, c.getName());
-                    try {
-                        JSONObject userJson = new JSONObject(c.getValue());
-                        System.out.println("userJson: "+userJson.toString());
-                        mesijiUser = User.getUserFromJson(userJson);
-//                        mesijiUser = new User(userJson.getString("_id"), userJson.getInt("userid"), userJson.getString("name"), userJson.getString("email"),userJson.getString("handle"));
-                        UserAlreadyLoggedIn(mesijiUser);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+        List<Cookie> cookies = mesijiCookieStore.getCookies();
+        Log.e(Constants.LOG, String.valueOf(cookies.size()));
+        for (Cookie c : cookies) {
+            if (c.getName().equals("mesiji.userInfo")) {
+                Log.e(Constants.LOG, c.getName());
+                try {
+                    JSONObject userJson = new JSONObject(c.getValue());
+                    System.out.println("userJson: " + userJson.toString());
+                    mesijiUser = User.getUserFromJson(userJson);
+                    UserAlreadyLoggedIn(mesijiUser);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
-            setContentView(R.layout.activity_main);
         }
+        setContentView(R.layout.startup);
     }
 
     private void UserAlreadyLoggedIn(User user) {
-        Log.e(Constants.LOG, user.toString());
+        Log.e(Constants.LOG, user.getUserId().toString());
         final Intent intent = new Intent(this, LocationActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable("user", user);
@@ -96,83 +76,12 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.default_menu, menu);
-        return true;
+    public void ShowLogin(View view){
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.signout:
-                logoutUser();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void logoutUser() {
-        mesijiCookieStore.clear();
-        System.out.println("LOGGING OUT.......OR TRYING......");
-        finish();
-        startActivity(getIntent());
-    }
-
-    public void loginUser(View view) {
-//        Context context = getApplicationContext();
-        EditText userEmail = (EditText) findViewById(R.id.email_text);
-        EditText userPass = (EditText) findViewById(R.id.password_text);
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("email", userEmail.getText().toString());
-            jsonObject.put("password", userPass.getText().toString());
-        } catch (Exception e) {
-        }
-
-        RequestParams params = new RequestParams();
-        params.put("formData", jsonObject.toString());
-        StringEntity se = null;
-        try {
-            se = new StringEntity(params.toString());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        mesijiClient.setCookieStore(mesijiCookieStore);
-        final User[] u = {null};
-
-        final Intent intent = new Intent(this, LocationActivity.class);
-        MesijiClient.post(getBaseContext(), "/auth/login", se, "application/json", new AsyncHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(String response) {
-                try {
-                    JSONObject res = new JSONObject(response);
-                    if (res.get("userid").toString().equals("0")) {
-//                        Toast toast = Toast.makeText(getBaseContext(), "Invalid Username/Password combination", 3000);
-//                        toast.show();
-                        alert = new AlertDialogManager(getApplicationContext());
-                        alert.showAlertDialog(MainActivity.this, "Login failed...", "Username/Password is incorrect");
-                    } else {
-                        u[0] = User.getUserFromJson(res);
-                        BasicClientCookie mesijiCookie = new BasicClientCookie("mesiji.userInfo", res.toString());
-                        mesijiCookie.setDomain("msgstory.com");
-                        mesijiCookie.setPath("/");
-                        mesijiCookie.setVersion(1);
-                        mesijiCookieStore.addCookie(mesijiCookie);
-                        UserAlreadyLoggedIn(u[0]);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    public void registerForm(View view) {
+    public void ShowRegister(View view) {
         Intent intent = new Intent(this, Register.class);
         startActivity(intent);
     }

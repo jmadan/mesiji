@@ -13,4 +13,5 @@
     <color name="text_heading">#006868</color>
     <color name="text_list">#006868</color>
     <color name="text_alert">#006868</color>
+    <color name="text_sub">#000000</color>
 </resources>

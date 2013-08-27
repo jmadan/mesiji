@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:orientation="horizontal"
+                android:padding="5dip"
+                android:layout_margin="10dp"
+        >
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+        android:layout_margin="15dp">
 
     <TextView
             android:layout_width="fill_parent"
@@ -12,9 +21,8 @@
             android:id="@+id/con_heading"
             android:layout_gravity="center"
             android:textColor="@color/text_heading"
-            android:textStyle="bold"
-            android:typeface="monospace"
-            android:textSize="20dp"
+            android:textStyle="italic"
+            android:textSize="30dp"
             android:gravity="center"/>
 
     <EditText
@@ -23,14 +31,21 @@
             android:id="@+id/save_message_txt"
             android:layout_gravity="center"
             android:hint="Whats on your mind?"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textStyle="italic"
+            android:layout_margin="10dp"/>
 
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save Message"
+            android:text="Postit"
+            android:textStyle="italic"
             android:id="@+id/save_message"
             android:layout_gravity="center"
-            android:onClick="saveMessage"/>
+            android:onClick="saveMessage"
+            android:background="@drawable/border"
+            android:layout_margin="10dp"/>
 
 </LinearLayout>
+
+    </RelativeLayout>

@@ -17,16 +17,18 @@
     <string name="dob_text">Date of Birth</string>
     <string name="email_text">Email</string>
     <string name="register_button">Register</string>
-    <string name="create_conversation_heading">Start the revolution!</string>
+    <string name="create_conversation_heading">Say Something!</string>
     <string name="create_conversation_small_heading">Say whats on your mind.</string>
     <string name="conversation_title">Conversation title</string>
     <string name="save_message_heading">Speak your mind!</string>
 
     <!--Menu Items-->
     <string name="refresh">refresh</string>
-    <string name="signout">signout</string>
+    <string name="signout">Sign Out</string>
     <string name="start_login">Sign In</string>
     <string name="start_register">Sign Up</string>
     <string name="register">Register</string>
+    <string name="setting">Settings</string>
+    <string name="register_heading">Create your Account</string>
 
 </resources>

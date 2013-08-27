@@ -7,22 +7,11 @@
               android:background="@drawable/city"
               android:gravity="bottom">
 
-    <Button android:id="@+id/start_login"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+    <Button style="@style/ButtonStyle"
+            android:id="@+id/start_login"
             android:text="@string/start_login"
-            android:ems="10"
             android:onClick="ShowLogin"
-            android:gravity="center|center_horizontal"
-            android:textAlignment="center"
-            android:layout_gravity="bottom"
-            android:typeface="monospace"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="#006868"
-            android:textColor="#ffffff"/>
+            />
 
     <TextView
             android:layout_width="wrap_content"
@@ -36,22 +25,9 @@
             android:textColor="#ffffff"
             />
 
-    <Button
+    <Button style="@style/ButtonStyle"
             android:id="@+id/start_register"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
             android:text="@string/start_register"
-            android:ems="10"
-            android:onClick="ShowRegister"
-            android:gravity="center|center_horizontal"
-            android:textAlignment="center"
-            android:layout_gravity="center"
-            android:typeface="monospace"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="#006868"
-            android:textColor="#ffffff"/>
+            android:onClick="ShowRegister"/>
 
 </LinearLayout>

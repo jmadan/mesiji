@@ -105,14 +105,21 @@ public class LocationActivity extends Activity {
             case R.id.signout:
                 logoutUser();
                 return true;
+            case R.id.refresh:
+                Intent i = getIntent();
+                finish();
+                startActivity(i);
+                return true;
+            case R.id.search:
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
     private void logoutUser() {
-
-        System.out.println("LOGGING OUT.......OR TRYING......");
+        mesijiCookieStore = new PersistentCookieStore(getApplicationContext());
+        mesijiCookieStore.clear();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
     }

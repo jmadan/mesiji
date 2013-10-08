@@ -27,6 +27,10 @@ public class User implements Parcelable {
         return _id;
     }
 
+    public String getName(){
+        return name;
+    }
+
     public String getEmail() {
         return email;
     }

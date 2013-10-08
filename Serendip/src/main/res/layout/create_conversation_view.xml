@@ -32,7 +32,7 @@
             style="@style/MultiLineText"
             android:inputType="textMultiLine"
             android:id="@+id/message"
-            android:hint="!"
+            android:hint=""
             android:background="@drawable/border"
             android:cursorVisible="true"/>
 

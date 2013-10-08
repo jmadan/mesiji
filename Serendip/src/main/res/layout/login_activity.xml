@@ -60,7 +60,8 @@
                 android:id="@+id/forgotTextView"
                 android:layout_gravity="center"
                 android:textSize="10dp"
-                android:gravity="center_horizontal"
-                />
+                android:gravity="center_horizontal" />
+
+
 
     </LinearLayout>

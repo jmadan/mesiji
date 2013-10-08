@@ -54,12 +54,12 @@
         <activity
                 android:name=".activity.ConversationActivity"
                 android:label="@string/title_activity_home"
-                android:parentActivityName="com.thirtysix.serendip.LocationActivity" >
+                android:parentActivityName="com.thirtysix.serendip.MainActivity" >
         </activity>
         <activity
                 android:name=".activity.OpenConversationActivity"
                 android:label="@string/title_activity_home"
-                android:parentActivityName="com.thirtysix.serendip.ConversationActivity" >
+                android:parentActivityName="com.thirtysix.serendip.MainActivity" >
         </activity>
         <activity
                 android:name="com.thirtysix.serendip.Register"

@@ -187,12 +187,12 @@ public class OpenConversationActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.leave_message:
-                saveMessage();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int i = item.getItemId();
+        if (i == R.id.leave_message) {
+            saveMessage();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

@@ -1,47 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:orientation="horizontal"
-                android:padding="2dip"
-                android:background="@drawable/border">
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:orientation="horizontal"
+    android:padding="2dip">
 
     <LinearLayout
-            android:id="@+id/con_thumbnail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="2dip"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="2dip"
-            android:layout_centerVertical="true">
+        android:id="@+id/con_thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="2dip"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="2dip"
+        android:layout_centerVertical="true">
 
 
         <ImageView
-                android:id="@+id/loc_image"
-                android:layout_width="20dip"
-                android:layout_height="20dip"
-                android:src="@drawable/megaphone_icon"
-                android:layout_centerVertical="true"/>
+            android:id="@+id/loc_image"
+            android:layout_width="30dip"
+            android:layout_height="30dip"
+            android:src="@drawable/megaphone_icon"
+            android:layout_centerVertical="true"/>
 
     </LinearLayout>
 
     <TextView style="@style/TextViewStyle"
-              android:layout_width="wrap_content"
-              android:id="@+id/cTitle"
-              android:layout_toRightOf="@+id/con_thumbnail"
-              android:textColor="@color/text_heading"
-              android:ellipsize="end"
-              android:textSize="14dip"
-              android:layout_centerVertical="true"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cTitle"
+        android:layout_toRightOf="@+id/con_thumbnail"
+        android:ellipsize="end"
+        android:textColor="@color/text_heading"
+        android:typeface="sans"
+        android:textSize="15dip"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/conv_user"
+        android:layout_toRightOf="@+id/con_thumbnail"
+        android:layout_below="@+id/cTitle"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="12dip"
+        android:layout_margin="2dip"
+        android:textColor="@color/text_sub"/>
 
     <ImageView
-            android:id="@+id/starconvo"
-            android:src="@drawable/star"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/cTitle"
-            android:layout_height="20dp"
-            android:layout_width="20dp"
-            android:layout_centerVertical="true"
-            />
+        android:id="@+id/starconvo"
+        android:src="@drawable/star"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/cTitle"
+        android:layout_height="30dip"
+        android:layout_width="30dp"
+        android:layout_centerVertical="true"
+        />
 
 </RelativeLayout>

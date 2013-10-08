@@ -7,42 +7,44 @@ import java.util.Date;
 
 public class Conversation implements Parcelable{
 
-    public String Id;
-    public String Title;
-    public String Creator;
+    public String id;
+    public String title;
+    public String creator;
     public Boolean isApproved;
-    public Date CreatedOn;
-    public String[] Circles;
+    public Date createdOn;
+    public String[] circles;
+    public User user;
 
-    private int mData;
-
-    public Conversation(String Id, String Title){
-        this.Id = Id;
-        this.Title = Title;
+    public Conversation(String Id, String Title, Boolean Isapproved, String[] circles, User user){
+        this.id = Id;
+        this.title = Title;
+        this.isApproved = Isapproved;
+        this.circles = circles;
+        this.user = user;
     }
 
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getTitle() {
-        return Title;
+        return title;
     }
 
     public void setTitle(String title) {
-        Title = title;
+        this.title = title;
     }
 
     public String getCreator() {
-        return Creator;
+        return creator;
     }
 
     public void setCreator(String creator) {
-        Creator = creator;
+        this.creator = creator;
     }
 
     public Boolean getApproved() {
@@ -54,19 +56,27 @@ public class Conversation implements Parcelable{
     }
 
     public Date getCreatedOn() {
-        return CreatedOn;
+        return createdOn;
     }
 
     public void setCreatedOn(Date createdOn) {
-        CreatedOn = createdOn;
+        this.createdOn = createdOn;
     }
 
     public String[] getCircles() {
-        return Circles;
+        return circles;
     }
 
     public void setCircles(String[] circles) {
-        Circles = circles;
+        this.circles = circles;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        user = user;
     }
 
     @Override
@@ -76,7 +86,10 @@ public class Conversation implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(i);
+        parcel.writeString(id);
+        parcel.writeString(title);
+        parcel.writeString(creator);
+        parcel.writeParcelable(user, i);
     }
 
     public static final Parcelable.Creator<Conversation> CREATOR
@@ -91,7 +104,22 @@ public class Conversation implements Parcelable{
     };
 
     private Conversation(Parcel in) {
-        mData = in.readInt();
+        readFromParcel(in);
+    }
+
+    private void readFromParcel(Parcel in) {
+
+        // The rest is the same as in ObjectA
+        id = in.readString();
+        title = in.readString();
+        creator = in.readString();
+
+        // readParcelable needs the ClassLoader
+        // but that can be picked up from the class
+        // This will solve the BadParcelableException
+        // because of ClassNotFoundException
+        user = in.readParcelable(User.class.getClassLoader());
+
     }
 
 }

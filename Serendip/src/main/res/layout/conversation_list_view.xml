@@ -6,10 +6,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 tools:context=".Home" >
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+    <TextView style="@style/HeadingStyle"
             android:id="@+id/venue_name"
             android:textColor="@color/text_heading"
             android:layout_alignParentTop="true"
@@ -17,12 +14,17 @@
 
     <ListView
             android:id="@+id/conversation_list"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="39dp"
+            android:fadeScrollbars="true"
             android:smoothScrollbar="true"
-            android:divider="@color/list_divider_bottom"
-            android:fadeScrollbars="true"/>
+            android:scrollbars="vertical"
+            android:scrollbarSize="20dip"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:divider="#006868"
+            android:dividerHeight="1dp"
+            android:scrollbarStyle="outsideOverlay"/>
 
 
 </RelativeLayout>

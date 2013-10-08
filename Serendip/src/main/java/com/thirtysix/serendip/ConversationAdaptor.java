@@ -37,24 +37,26 @@ public class ConversationAdaptor extends BaseAdapter{
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder holder = new ViewHolder();;
-        View v = view;
+    public View getView(int i, View convertView, ViewGroup viewGroup) {
+//        ViewHolder holder = new ViewHolder();
+        View v = convertView;
         if (v == null){
             LayoutInflater vi = (LayoutInflater) _c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.conversation_custom_row, null);
-//        TextView locName = (TextView) v.findViewById(R.id.cTitle);
-            holder.locName = (TextView) v.findViewById(R.id.cTitle);
-            v.setTag(holder);
-            Conversation cons = _data.get(i);
-            holder.locName.setText(cons.getTitle());
         }
 
+        TextView convTitle = (TextView) v.findViewById(R.id.cTitle);
+        TextView convUser = (TextView) v.findViewById(R.id.conv_user);
+//        v.setTag(holder);
+        Conversation cons = _data.get(i);
+        convTitle.setText(cons.getTitle());
+        convUser.setText(cons.getUser().getHandle().toString());
 
         return v;
     }
 
-    static class ViewHolder {
-        TextView locName;
-    }
+//    static class ViewHolder {
+//        TextView convTitle;
+//        TextView convUser;
+//    }
 }

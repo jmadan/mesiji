@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -47,6 +48,8 @@ public class LocationActivity extends Activity {
     AsyncHttpClient mesijiClient = new AsyncHttpClient();
     PersistentCookieStore mesijiCookieStore;
     User mesijiUser;
+    Context context;
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -57,13 +60,13 @@ public class LocationActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.location_list_view);
+        context = getBaseContext();
         ActionBar bar = getActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#006868")));
+        setContentView(R.layout.location_list_view);
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         mesijiUser = b.getParcelable("user");
-        Log.e(Constants.LOG, mesijiUser.getEmail().toString()+" I am in LocationActivity");
         mesijiCookieStore = new PersistentCookieStore(getApplicationContext());
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         final ListView LOCATION_LIST_VIEW = (ListView) findViewById(R.id.location_list);
@@ -73,7 +76,6 @@ public class LocationActivity extends Activity {
             MesijiClient.get("/location/coordinates/" + latlng, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(String response) {
-                    System.out.println(response);
                     GetLocations(response, LOCATION_LIST);
                     LocationAdaptor adapter = new LocationAdaptor(LOCATION_LIST, getApplicationContext());
                     LOCATION_LIST_VIEW.setAdapter(adapter);
@@ -94,26 +96,23 @@ public class LocationActivity extends Activity {
                 }
             });
         } else {
-            alert.showAlertDialog(getApplicationContext(), "Location Error", "Could not determine Venue...Please try again.");
+//            alert.showAlertDialog(context, "Location Error", "Could not determine Venue...Please try again.");
             Log.e(Constants.LOG, "Could not determine Venue...Please try again.");
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.signout:
-                logoutUser();
-                return true;
-            case R.id.refresh:
-                Intent i = getIntent();
-                finish();
-                startActivity(i);
-                return true;
-            case R.id.search:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        int i = item.getItemId();
+        if (i == R.id.signout) {
+            logoutUser();
+            return true;
+        } else if (i == R.id.refresh) {
+            return true;
+        } else if (i == R.id.search) {
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -195,7 +194,7 @@ public class LocationActivity extends Activity {
                     try {
                         json = new JSONObject(output);
                         conversations = json.getJSONObject("data").getJSONArray("json_data");
-                        System.out.println(conversations);
+//                        System.out.println(conversations);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -215,8 +214,8 @@ public class LocationActivity extends Activity {
                     new MyLocationListener());
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (location != null) {
-                loc = location.getLatitude() + "/" + location.getLongitude();
-                Log.e(Constants.LOG, loc);
+//                loc = location.getLatitude() + "/" + location.getLongitude();
+//                Log.e(Constants.LOG, loc);
             } else {
                 // This has to be removed once basic version is deployable
                 loc = "53.484601/-2.237296";
@@ -233,7 +232,7 @@ public class LocationActivity extends Activity {
                     "New Venue \n Longitude: %1$s \n Latitude: %2$s",
                     location.getLongitude(), location.getLatitude()
             );
-            Toast.makeText(LocationActivity.this, message, Toast.LENGTH_LONG).show();
+//            Toast.makeText(LocationActivity.this, message, Toast.LENGTH_LONG).show();
         }
 
         public void onStatusChanged(String s, int i, Bundle b) {

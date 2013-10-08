@@ -74,22 +74,18 @@ public class ConversationActivity extends Activity {
                 @Override
                 public void onSuccess(String response) {
                     GetConversations(response, CHATTER);
-
                     if (CHATTER.isEmpty()) {
                         setContentView(R.layout.create_conversation_view);
-
                     } else {
                         ConversationAdaptor adapter = new ConversationAdaptor(CHATTER, getApplicationContext());
                         CONVERSATION_LIST_VIEW.setAdapter(adapter);
                         CONVERSATION_LIST_VIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                Conversation con = (Conversation)CONVERSATION_LIST_VIEW.getItemAtPosition(i);
-                                Log.e(Constants.LOG, con.getTitle().toString());
                                 Conversation selectedConversation = (Conversation) adapterView.getItemAtPosition(i);
+                                Log.e(Constants.LOG, ">>>>>>>>>>"+selectedConversation.getTitle().toString());
                                 Intent intent = new Intent(getApplicationContext(), OpenConversationActivity.class);
                                 Bundle b = new Bundle();
-//                                b.putParcelableArrayList("cons", CHATTER);
                                 b.putString("conversation_title", selectedConversation.getTitle());
                                 b.putString("conversation_id", selectedConversation.getId());
                                 b.putParcelable("user", mesijiuser);
@@ -113,7 +109,15 @@ public class ConversationActivity extends Activity {
         final JSONObject jsonMessageObject = new JSONObject();
         JSONObject jsonVenueObject = new JSONObject();
         JSONArray jsonMessagesObject = new JSONArray();
+        JSONObject jsonUserObject = new JSONObject();
         try {
+            //User JSON Object
+            //{"_id":"522d8746156b5751b1000001","userid":100,"name":"Test User","email":"test@test.com","handle":"testuser","phone":"9008307311","relations":{"messages":null},"created_on":"0001-01-01T00:00:00Z"}
+            jsonUserObject.put("_id", mesijiuser.get_id().toString());
+            jsonUserObject.put("name", mesijiuser.getName().toString());
+            jsonUserObject.put("email", mesijiuser.getEmail().toString());
+            jsonUserObject.put("handle", mesijiuser.getHandle().toString());
+
             //Message JSON Object
             jsonMessageObject.put("msg_text", msg.getText().toString());
             jsonMessageObject.put("user_id", mesijiuser.get_id().toString());
@@ -129,7 +133,7 @@ public class ConversationActivity extends Activity {
             jsonConversationObject.put("title", con_title.getText().toString());
 //            jsonConversationObject.put("messages", jsonMessagesObject);
             jsonConversationObject.put("venue", jsonVenueObject);
-            jsonConversationObject.put("creator", mesijiuser.get_id());
+            jsonConversationObject.put("user", jsonUserObject);
             jsonConversationObject.put("is_approved", true);
         } catch (Exception e) {
             Log.e(Constants.LOG, e.toString());
@@ -229,7 +233,6 @@ public class ConversationActivity extends Activity {
         try {
             json = new JSONObject(output);
             conversations = json.getJSONObject("data").getJSONArray("json_data");
-            System.out.println(conversations.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -239,7 +242,15 @@ public class ConversationActivity extends Activity {
             try {
                 final JSONObject jsonConversation = conversations.getJSONObject(i);
                 if (jsonConversation.get("is_approved").toString().equals("true")){
-                    chatter.add(new Conversation(jsonConversation.getString("_id"), jsonConversation.getString("title")));
+                    JSONObject userObject = jsonConversation.getJSONObject("user");
+                    chatter.add(new Conversation(jsonConversation.getString("_id"),
+                            jsonConversation.getString("title"),
+                            jsonConversation.getBoolean("is_approved"),
+                            new String[]{jsonConversation.getJSONArray("circles").toString()},
+                            new User(userObject.getString("_id"), userObject.getInt("userid"),
+                                    userObject.getString("name"), userObject.getString("email"),
+                                    userObject.getString("handle"))
+                            ));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

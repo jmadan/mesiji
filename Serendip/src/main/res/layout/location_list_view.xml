@@ -6,9 +6,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 tools:context=".Home">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+    <TextView style="@style/HeadingStyle"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Where about's are you?"
             android:textColor="@color/text_heading"
@@ -20,8 +18,13 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="39dp"
-            android:fadeScrollbars="true"
+            android:fadeScrollbars="false"
             android:smoothScrollbar="true"
-            android:divider="@color/list_divider_bottom" />
+            android:scrollbars="vertical"
+            android:scrollbarSize="20dip"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:divider="#006868"
+            android:dividerHeight="1dp"
+            android:scrollbarStyle="outsideOverlay"/>
 
 </RelativeLayout>

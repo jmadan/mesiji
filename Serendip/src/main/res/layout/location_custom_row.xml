@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:textColor="@color/text_heading"
             android:typeface="sans"
-            android:textSize="14dip"
+            android:textSize="15dip"
             android:textStyle="bold"/>
 
     <TextView
@@ -40,7 +40,7 @@
             android:layout_below="@+id/loc_name"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:textSize="10dip"
+            android:textSize="12dip"
             android:layout_margin="2dip"
             android:textColor="@color/text_sub"/>
 

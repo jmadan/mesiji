@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -46,13 +47,21 @@ public class LoginActivity extends Activity {
         ActionBar bar = getActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#006868")));
         mesijiCookieStore = new PersistentCookieStore(getApplicationContext());
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        final boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        final boolean wifiEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        if (!gpsEnabled && !wifiEnabled) {
-            Log.e(Constants.LOG, "Network is not available");
-            setContentView(R.layout.no_network);
-        }
+
+        TextView forgotPass = (TextView) findViewById(R.id.forgotTextView);
+
+        forgotPass.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+
+            }
+        });
+//        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        final boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+//        final boolean wifiEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+//        if (!gpsEnabled && !wifiEnabled) {
+//            Log.e(Constants.LOG, "Network is not available");
+//            setContentView(R.layout.no_network);
+//        }
     }
 
     @Override
@@ -64,13 +73,12 @@ public class LoginActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.signout:
-                logoutUser();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
+        int i = item.getItemId();
+        if (i == R.id.signout) {
+            logoutUser();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 
@@ -84,6 +92,7 @@ public class LoginActivity extends Activity {
     public void LoginUser(View view) {
         EditText userEmail = (EditText) findViewById(R.id.email_text);
         EditText userPass = (EditText) findViewById(R.id.password_text);
+
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("email", userEmail.getText().toString());
@@ -132,5 +141,9 @@ public class LoginActivity extends Activity {
                 startActivity(intent);
             }
         });
+    }
+
+    public void ForgotPassword(View view){
+        System.out.println("hello there...I m here to remind u of ur password");
     }
 }

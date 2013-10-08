@@ -6,9 +6,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 tools:context=".Home" >
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+    <TextView style="@style/HeadingStyle"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/con_title"
             android:textColor="@color/text_heading"

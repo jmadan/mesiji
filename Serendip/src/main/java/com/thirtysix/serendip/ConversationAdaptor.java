@@ -45,8 +45,8 @@ public class ConversationAdaptor extends BaseAdapter{
             v = vi.inflate(R.layout.conversation_custom_row, null);
         }
 
-        TextView convTitle = (TextView) v.findViewById(R.id.cTitle);
-        TextView convUser = (TextView) v.findViewById(R.id.conv_user);
+        TextView convTitle = (TextView) v.findViewById(R.id.conversation_title);
+        TextView convUser = (TextView) v.findViewById(R.id.conversation_user);
 //        v.setTag(holder);
         Conversation cons = _data.get(i);
         convTitle.setText(cons.getTitle());

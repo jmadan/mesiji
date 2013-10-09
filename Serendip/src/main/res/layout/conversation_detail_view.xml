@@ -17,10 +17,9 @@
             android:id="@+id/messages_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="39dp"
+            android:layout_below="@+id/con_title"
             android:smoothScrollbar="true"
             android:divider="@color/list_divider_bottom"
             android:fadeScrollbars="true"/>
-
 
 </RelativeLayout>

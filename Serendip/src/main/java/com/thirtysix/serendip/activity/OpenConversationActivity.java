@@ -5,13 +5,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -37,7 +35,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class OpenConversationActivity extends Activity {
 
@@ -45,6 +47,7 @@ public class OpenConversationActivity extends Activity {
     String con_title = null;
     ArrayList<Message> message_list = new ArrayList<Message>();
     User mesijiUser;
+    Conversation conversation;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -65,34 +68,32 @@ public class OpenConversationActivity extends Activity {
             Intent homeIntent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(homeIntent);
         } else {
-            con_id = b.getString("conversation_id");
-            con_title = b.getString("conversation_title");
-            mesijiUser = b.getParcelable("user");
+//            con_id = b.getString("conversation_id");
+//            con_title = b.getString("conversation_title");
+//            mesijiUser = b.getParcelable("user");
+            conversation = b.getParcelable("conversation");
             TextView conTitle = (TextView) findViewById(R.id.con_title);
-            conTitle.setText(con_title.trim());
+            conTitle.setText(conversation.getTitle());
             final ListView MESSAGE_LIST_VIEW = (ListView) findViewById(R.id.messages_list);
-//            final ArrayList<Message> CONVERSATION_MESSAGES = new ArrayList<Message>();
-//            conversation_list = bundle.getParcelableArrayList("cons");
-//            Log.e(Constants.LOG, conversation_list.get(0).getTitle());
-            MesijiClient.get("/message/conversation/" + con_id, new AsyncHttpResponseHandler() {
-                @Override
-                public void onSuccess(String response) {
-                    getMessages(response, message_list);
-                    if (!message_list.isEmpty()) {
-                        MessageAdaptor messageAdaptor = new MessageAdaptor(message_list, getApplicationContext());
-                        MESSAGE_LIST_VIEW.setAdapter(messageAdaptor);
-                    } else {
-                        setContentView(R.layout.create_message);
-                    }
-                }
-            });
+
+//            MesijiClient.get("/message/conversation/" + conversation.getId(), new AsyncHttpResponseHandler() {
+//                @Override
+//                public void onSuccess(String response) {
+//                    getMessages(response, message_list);
+//                    if (!message_list.isEmpty()) {
+//                        MessageAdaptor messageAdaptor = new MessageAdaptor(message_list, getApplicationContext());
+//                        MESSAGE_LIST_VIEW.setAdapter(messageAdaptor);
+//                    } else {
+//                        setContentView(R.layout.create_message);
+//                    }
+//                }
+//            });
 
         }
 
     }
 
     private void getMessages(String response, ArrayList<Message> message_list) {
-        Log.e(Constants.LOG, response);
         InputStream is = new ByteArrayInputStream(response.getBytes());
         StringBuilder sb = new StringBuilder();
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -119,9 +120,14 @@ public class OpenConversationActivity extends Activity {
         for (i = 0; i < msgs.length(); i++) {
             try {
                 final JSONObject jsonMessage = msgs.getJSONObject(i);
-                System.out.println(jsonMessage.get("msg_text").toString()+"----"+jsonMessage.get("user_id").toString());
-                message_list.add(new Message(jsonMessage.get("msg_text").toString(), jsonMessage.get("user_id").toString()));
+//                System.out.println(jsonMessage.get("msg_text").toString()+"----"+jsonMessage.get("user_id").toString());
+                message_list.add(new Message(jsonMessage.get("_id").toString(),
+                        jsonMessage.get("msg_text").toString(),
+                        jsonMessage.get("user_id").toString(),
+                        new SimpleDateFormat("MM/dd/yyy HH:MM:SS a").parse(jsonMessage.get("created_on").toString())));
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
@@ -194,6 +200,54 @@ public class OpenConversationActivity extends Activity {
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    public User getUserById(String user_id) {
+        final User[] user = {new User()};
+        MesijiClient.get("/user/" + user_id, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(String response) {
+                user[0] = getUserFromJson(response);
+            }
+        });
+        return user[0];
+    }
+
+    private User getUserFromJson(String response) {
+        User user = null;
+        InputStream is = new ByteArrayInputStream(response.getBytes());
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        try {
+            for (String line; null != (line = reader.readLine()); ) {
+                sb.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String output = sb.toString();
+        JSONObject json = null;
+        JSONObject jUser = null;
+        try {
+            json = new JSONObject(output);
+            jUser = json.getJSONObject("data").getJSONObject("json_data");
+            user._id = jUser.getString("_id");
+            user.name = jUser.getString("name");
+            user.email = jUser.getString("email");
+            user.handle = jUser.getString("handle");
+            user.userId = jUser.getInt("userid");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+//        try {
+//            final JSONObject jsonMessage = msgs.getJSONObject(i);
+//            User.getUserById(jsonMessage.get("user_id").toString());
+//            System.out.println(jsonMessage.get("msg_text").toString()+"----"+jsonMessage.get("user_id").toString());
+//            message_list.add(new Message(jsonMessage.get("msg_text").toString(), jsonMessage.get("user_id").toString()));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+        return user;
     }
 
 }

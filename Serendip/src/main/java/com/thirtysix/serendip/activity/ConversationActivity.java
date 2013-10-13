@@ -22,6 +22,7 @@ import com.thirtysix.serendip.ConversationAdaptor;
 import com.thirtysix.serendip.MesijiClient;
 import com.thirtysix.serendip.R;
 import com.thirtysix.serendip.model.Conversation;
+import com.thirtysix.serendip.model.Message;
 import com.thirtysix.serendip.model.User;
 import com.thirtysix.serendip.model.Venue;
 
@@ -37,6 +38,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ConversationActivity extends Activity {
 
@@ -86,9 +88,10 @@ public class ConversationActivity extends Activity {
                                 Log.e(Constants.LOG, ">>>>>>>>>>"+selectedConversation.getTitle().toString());
                                 Intent intent = new Intent(getApplicationContext(), OpenConversationActivity.class);
                                 Bundle b = new Bundle();
-                                b.putString("conversation_title", selectedConversation.getTitle());
-                                b.putString("conversation_id", selectedConversation.getId());
-                                b.putParcelable("user", mesijiuser);
+//                                b.putString("conversation_title", selectedConversation.getTitle());
+//                                b.putString("conversation_id", selectedConversation.getId());
+//                                b.putParcelable("user", mesijiuser);
+                                b.putParcelable("conversation", selectedConversation);
                                 intent.putExtras(b);
                                 startActivity(intent);
                             }
@@ -249,8 +252,9 @@ public class ConversationActivity extends Activity {
                             new String[]{jsonConversation.getJSONArray("circles").toString()},
                             new User(userObject.getString("_id"), userObject.getInt("userid"),
                                     userObject.getString("name"), userObject.getString("email"),
-                                    userObject.getString("handle"))
-                            ));
+                                    userObject.getString("handle")),
+                            new ArrayList<Message>())
+                            );
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

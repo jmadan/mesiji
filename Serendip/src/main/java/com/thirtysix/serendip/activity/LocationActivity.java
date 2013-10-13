@@ -108,6 +108,7 @@ public class LocationActivity extends Activity {
             logoutUser();
             return true;
         } else if (i == R.id.refresh) {
+            
             return true;
         } else if (i == R.id.search) {
             return true;

@@ -117,5 +117,4 @@ public class User implements Parcelable {
         }
         return user;
     }
-
 }

@@ -2,9 +2,20 @@ package com.thirtysix.serendip.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.thirtysix.serendip.Constants;
+import com.thirtysix.serendip.MesijiClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class User implements Parcelable {
 
@@ -22,6 +33,8 @@ public class User implements Parcelable {
         this.email = email;
         this.handle = handle;
     }
+
+    public User(){};
 
     public String get_id(){
         return _id;
@@ -104,4 +117,5 @@ public class User implements Parcelable {
         }
         return user;
     }
+
 }

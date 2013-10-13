@@ -3,6 +3,7 @@ package com.thirtysix.serendip.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Conversation implements Parcelable{
@@ -14,13 +15,23 @@ public class Conversation implements Parcelable{
     public Date createdOn;
     public String[] circles;
     public User user;
+    public ArrayList<Message> messages;
 
-    public Conversation(String Id, String Title, Boolean Isapproved, String[] circles, User user){
-        this.id = Id;
-        this.title = Title;
-        this.isApproved = Isapproved;
+    public Conversation(String id, String title, Boolean isApproved, String[] circles, User user, ArrayList<Message> messages){
+        this.id = id;
+        this.title = title;
+        this.isApproved = isApproved;
         this.circles = circles;
         this.user = user;
+        this.messages = messages;
+    }
+
+    public ArrayList<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(ArrayList<Message> messages) {
+        this.messages = messages;
     }
 
     public String getId() {
@@ -90,12 +101,12 @@ public class Conversation implements Parcelable{
         parcel.writeString(title);
         parcel.writeString(creator);
         parcel.writeParcelable(user, i);
+        parcel.writeTypedList(messages);
     }
 
-    public static final Parcelable.Creator<Conversation> CREATOR
-            = new Parcelable.Creator<Conversation>() {
-        public Conversation createFromParcel(Parcel in) {
-            return new Conversation(in);
+    public static final Parcelable.Creator<Conversation> CREATOR = new Parcelable.Creator<Conversation>() {
+        public Conversation createFromParcel(Parcel parcel) {
+            return new Conversation(parcel);
         }
 
         public Conversation[] newArray(int size) {
@@ -103,23 +114,22 @@ public class Conversation implements Parcelable{
         }
     };
 
-    private Conversation(Parcel in) {
-        readFromParcel(in);
+    private Conversation(Parcel parcel) {
+        readFromParcel(parcel);
     }
 
-    private void readFromParcel(Parcel in) {
+    private void readFromParcel(Parcel parcel) {
 
         // The rest is the same as in ObjectA
-        id = in.readString();
-        title = in.readString();
-        creator = in.readString();
-
+        id = parcel.readString();
+        title = parcel.readString();
+        creator = parcel.readString();
+        messages = parcel.readArrayList(Message.class.getClassLoader());
         // readParcelable needs the ClassLoader
         // but that can be picked up from the class
         // This will solve the BadParcelableException
         // because of ClassNotFoundException
-        user = in.readParcelable(User.class.getClassLoader());
-
+        user = parcel.readParcelable(User.class.getClassLoader());
     }
 
 }

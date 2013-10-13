@@ -44,14 +44,17 @@ public class MessageAdaptor extends BaseAdapter {
             LayoutInflater vi = (LayoutInflater) _c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.message_custom_row, null);
             holder.msg = (TextView) v.findViewById(R.id.msg_title);
+            holder.msg_owner = (TextView) v.findViewById(R.id.message_owner);
             v.setTag(holder);
             Message msgs = _data.get(i);
             holder.msg.setText(msgs.getMessage().toString());
+//            holder.msg_owner.setText(msgs.user.getName().toString());
         }
         return v;
     }
 
     static class ViewHolder {
         TextView msg;
+        TextView msg_owner;
     }
 }

@@ -37,14 +37,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ConversationActivity extends Activity {
 
     Venue atVenue;
     AlertDialogManager alert;
     User mesijiuser;
+    List<Conversation> conversations = new ArrayList<Conversation>();
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -60,11 +64,8 @@ public class ConversationActivity extends Activity {
         ActionBar bar = getActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#006868")));
 
-        Intent intent = getIntent();
-        Bundle b = intent.getExtras();
-        atVenue = b.getParcelable("venueObj");
-        mesijiuser = b.getParcelable("user");
-        final ArrayList<Conversation> CHATTER = new ArrayList<Conversation>();
+        ReadIntent();
+
         if (atVenue.id.isEmpty()) {
             alert.showAlertDialog(getApplicationContext(), "Location Error", "Somehow we lost the location you selected! ");
             Log.e(Constants.LOG, "Venue is missing");
@@ -75,11 +76,11 @@ public class ConversationActivity extends Activity {
             MesijiClient.get("/conversation/all/" + atVenue.getId().toString(), new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(String response) {
-                    GetConversations(response, CHATTER);
-                    if (CHATTER.isEmpty()) {
+                    conversations = GetConversations(response);
+                    if (conversations.isEmpty()) {
                         setContentView(R.layout.create_conversation_view);
                     } else {
-                        ConversationAdaptor adapter = new ConversationAdaptor(CHATTER, getApplicationContext());
+                        ConversationAdaptor adapter = new ConversationAdaptor(conversations, getApplicationContext());
                         CONVERSATION_LIST_VIEW.setAdapter(adapter);
                         CONVERSATION_LIST_VIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
@@ -102,6 +103,13 @@ public class ConversationActivity extends Activity {
 
         }
 
+    }
+
+    private void ReadIntent() {
+        Intent intent = getIntent();
+        Bundle b = intent.getExtras();
+        atVenue = b.getParcelable("venueObj");
+        mesijiuser = b.getParcelable("user");
     }
 
     public void createConversation(View view) {
@@ -219,7 +227,8 @@ public class ConversationActivity extends Activity {
         return status[0];
     }
 
-    private void GetConversations(String response, ArrayList<Conversation> chatter) {
+    private List<Conversation> GetConversations(String response) {
+        List<Conversation> chatter = new ArrayList<Conversation>();
         InputStream is = new ByteArrayInputStream(response.getBytes());
         StringBuilder sb = new StringBuilder();
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -246,57 +255,56 @@ public class ConversationActivity extends Activity {
                 final JSONObject jsonConversation = conversations.getJSONObject(i);
                 if (jsonConversation.get("is_approved").toString().equals("true")){
                     JSONObject userObject = jsonConversation.getJSONObject("user");
-                    chatter.add(new Conversation(jsonConversation.getString("_id"),
+                    List<Message> messages = GetMessages(jsonConversation);
+                    chatter.add(new Conversation(
+                            jsonConversation.getString("_id"),
                             jsonConversation.getString("title"),
                             jsonConversation.getBoolean("is_approved"),
-                            new String[]{jsonConversation.getJSONArray("circles").toString()},
                             new User(userObject.getString("_id"), userObject.getInt("userid"),
                                     userObject.getString("name"), userObject.getString("email"),
                                     userObject.getString("handle")),
-                            new ArrayList<Message>())
+                            new String[]{jsonConversation.getJSONArray("circles").toString()},
+                            messages)
                             );
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+
+        return chatter;
     }
 
-    private void GetVenueDetail(String response) {
-        InputStream is = new ByteArrayInputStream(response.getBytes());
-        StringBuilder sb = new StringBuilder();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        try {
-            for (String line; null != (line = reader.readLine()); ) {
-                sb.append(line);
+    private List<Message> GetMessages(JSONObject jsonConversation) {
+        JSONArray jsonMessages = null;
+//        JSONObject jsonMessage = null;
+        try{
+            jsonMessages = jsonConversation.getJSONArray("messages");
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+        List<Message> messages = new ArrayList<Message>();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Message m = new Message();
+        for (int i=0; i<jsonMessages.length(); i++) {
+            try {
+//                jsonMessage = jsonMessages.getJSONObject(i);
+                messages.add(i, new Message(jsonMessages.getJSONObject(i).getString("_id"),
+                        jsonMessages.getJSONObject(i).getString("msg_text"),
+                        jsonMessages.getJSONObject(i).getString("user_id"),
+                        simpleDateFormat.parse(jsonMessages.getJSONObject(i).getString("created-on"))));
+//                m.id = jsonMessage.getString("_id").toString();
+//                m.setMessage(jsonMessage.getString("msg_text"));
+//                m.setUserId(jsonMessage.getString("user_id"));
+////                m.setCreatedOn(JsonMessages.getJSONObject(i).getString("created_on"));
+//                messages.add(m);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ParseException e){
+
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        String output = sb.toString();
-        JSONObject json = null;
-        JSONObject venue = null;
-        try {
-            json = new JSONObject(output);
-            venue = json.getJSONObject("response").getJSONObject("venues");
-            atVenue.setId(venue.getString("id"));
-            atVenue.setName(venue.getString("name"));
-            atVenue.contact.setPhone(venue.getString("phone"));
-            atVenue.contact.setFormattedPhone(venue.getString("formattedPhone"));
-            atVenue.locationDetails.setAddress(venue.getString("address"));
-            atVenue.locationDetails.setLat(venue.getDouble("lat"));
-            atVenue.locationDetails.setLng(venue.getDouble("lng"));
-            atVenue.locationDetails.setCity(venue.getString("city"));
-            atVenue.locationDetails.setPostalCode(venue.getString("postalCode"));
-            atVenue.locationDetails.setState(venue.getString("state"));
-            atVenue.locationDetails.setCountry(venue.getString("country"));
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        return messages;
     }
 
-    public void show_messages(){
-        Log.e(Constants.LOG, "I am here to my surprise!");
-    }
 }

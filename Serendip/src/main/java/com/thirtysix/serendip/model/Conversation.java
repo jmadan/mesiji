@@ -18,7 +18,7 @@ public class Conversation implements Parcelable{
     public User user;
     public List<Message> messages;
 
-    public Conversation(String id, String title, Boolean isApproved, String[] circles, User user, List<Message> messages){
+    public Conversation(String id, String title, Boolean isApproved, User user, String[] circles, List<Message> messages){
         this.id = id;
         this.title = title;
         this.isApproved = isApproved;

@@ -12,6 +12,15 @@ public class Message implements Parcelable {
     public String userId;
     public Date createdOn;
 
+    public Message(String id, String msg, String userId, Date createdOn){
+        this.id = id;
+        this.message = msg;
+        this.userId = userId;
+        this.createdOn = createdOn;
+    }
+
+    public Message(){}
+
     public String getId() {
         return id;
     }
@@ -42,13 +51,6 @@ public class Message implements Parcelable {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public Message(String id, String msg, String userId, Date createdOn){
-        this.id = id;
-        this.message = msg;
-        this.userId = userId;
-        this.createdOn = createdOn;
     }
 
     @Override

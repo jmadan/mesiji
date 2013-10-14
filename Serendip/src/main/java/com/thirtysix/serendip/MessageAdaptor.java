@@ -10,13 +10,14 @@ import android.widget.TextView;
 import com.thirtysix.serendip.model.Message;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MessageAdaptor extends BaseAdapter {
 
-    private ArrayList<Message> _data;
+    private List<Message> _data;
     Context _c;
 
-    public MessageAdaptor(ArrayList<Message> data, Context c){
+    public MessageAdaptor(List<Message> data, Context c){
         _data = data;
         _c = c;
     }
@@ -38,7 +39,7 @@ public class MessageAdaptor extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder holder = new ViewHolder();;
+        ViewHolder holder = new ViewHolder();
         View v = view;
         if (v == null){
             LayoutInflater vi = (LayoutInflater) _c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

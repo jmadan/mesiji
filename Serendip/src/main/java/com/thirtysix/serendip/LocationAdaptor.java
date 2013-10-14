@@ -10,13 +10,14 @@ import android.widget.TextView;
 import com.thirtysix.serendip.model.Venue;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LocationAdaptor extends BaseAdapter {
 
-    private ArrayList<Venue> _data;
+    private List<Venue> _data;
     Context _c;
 
-    public LocationAdaptor (ArrayList<Venue> data, Context c){
+    public LocationAdaptor (List<Venue> data, Context c){
         _data = data;
         _c = c;
     }

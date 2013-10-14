@@ -10,13 +10,14 @@ import android.widget.TextView;
 import com.thirtysix.serendip.model.Conversation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ConversationAdaptor extends BaseAdapter{
 
-    private ArrayList<Conversation> _data;
+    private List<Conversation> _data;
     Context _c;
 
-    public ConversationAdaptor(ArrayList<Conversation> data, Context c){
+    public ConversationAdaptor(List<Conversation> data, Context c){
         _data = data;
         _c = c;
     }

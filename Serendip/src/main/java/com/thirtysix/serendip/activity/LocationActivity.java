@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -25,7 +25,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.PersistentCookieStore;
 import com.thirtysix.serendip.AlertDialogManager;
@@ -45,39 +44,47 @@ public class LocationActivity extends Activity {
 
     LocationManager locationManager;
     AlertDialogManager alert;
-    AsyncHttpClient mesijiClient = new AsyncHttpClient();
     PersistentCookieStore mesijiCookieStore;
     User mesijiUser;
-    Context context;
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.default_menu, menu); // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.default_menu, menu);
         return true;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getBaseContext();
+        setContentView(R.layout.location_list_view);
         ActionBar bar = getActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#006868")));
-        setContentView(R.layout.location_list_view);
+        ReadIntent();
+        ShowLocationListView();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+    }
+
+    private void ReadIntent() {
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         mesijiUser = b.getParcelable("user");
-        mesijiCookieStore = new PersistentCookieStore(getApplicationContext());
-        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+        mesijiCookieStore = new PersistentCookieStore(getBaseContext());
+    }
+
+    private void ShowLocationListView() {
         final ListView LOCATION_LIST_VIEW = (ListView) findViewById(R.id.location_list);
         String latlng = getLatLng();
-        final ArrayList<Venue> LOCATION_LIST = new ArrayList<Venue>();
         if (latlng != null) {
             MesijiClient.get("/location/coordinates/" + latlng, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(String response) {
-                    GetLocations(response, LOCATION_LIST);
-                    LocationAdaptor adapter = new LocationAdaptor(LOCATION_LIST, getApplicationContext());
+                    final List<Venue> locationList = GetLocations(response);
+                    LocationAdaptor adapter = new LocationAdaptor(locationList, getBaseContext());
                     LOCATION_LIST_VIEW.setAdapter(adapter);
                     LOCATION_LIST_VIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
@@ -85,8 +92,8 @@ public class LocationActivity extends Activity {
                             Venue v = (Venue) adapterView.getItemAtPosition(i);
                             Intent intent = new Intent(getApplicationContext(), ConversationActivity.class);
                             Bundle b = new Bundle();
-                            int lIndex = LOCATION_LIST.indexOf(v);
-                            v.setLocationDetails(LOCATION_LIST.get(lIndex).locationDetails);
+                            int lIndex = locationList.indexOf(v);
+                            v.setLocationDetails(locationList.get(lIndex).locationDetails);
                             b.putParcelable("venueObj", v);
                             b.putParcelable("user", mesijiUser);
                             intent.putExtras(b);
@@ -108,7 +115,7 @@ public class LocationActivity extends Activity {
             logoutUser();
             return true;
         } else if (i == R.id.refresh) {
-            
+            ShowLocationListView();
             return true;
         } else if (i == R.id.search) {
             return true;
@@ -124,7 +131,8 @@ public class LocationActivity extends Activity {
         startActivity(intent);
     }
 
-    private void GetLocations(String response, ArrayList<Venue> locs) {
+    private ArrayList<Venue> GetLocations(String response) {
+        ArrayList<Venue> locs = new ArrayList<Venue>();
         InputStream is = new ByteArrayInputStream(response.getBytes());
         StringBuilder sb = new StringBuilder();
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -135,25 +143,22 @@ public class LocationActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String output = sb.toString();
-        JSONObject json = null;
+        JSONObject jsonObject = null;
         JSONArray venues = null;
         try {
-            json = new JSONObject(output);
-            venues = json.getJSONObject("response").getJSONArray("venues");
+            jsonObject = new JSONObject(sb.toString());
+            venues = jsonObject.getJSONObject("response").getJSONArray("venues");
             System.out.println(venues.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        int i;
-        for (i = 0; i < venues.length(); i++) {
+        for (int i = 0; i < venues.length(); i++) {
             try {
-                final JSONObject jsonLocation = venues.getJSONObject(i);
-                JSONObject jlocation = jsonLocation.getJSONObject("location");
+                JSONObject jlocation = venues.getJSONObject(i).getJSONObject("location");
                 String address = null;
-                String lat = null;
-                String lng = null;
+//                String lat = null;
+//                String lng = null;
 
                 LocationDetails locationDetails = new LocationDetails(jlocation.getDouble("lat"), jlocation.getDouble("lng"));
                 if (jlocation.has("address"))
@@ -166,48 +171,18 @@ public class LocationActivity extends Activity {
 //                locationDetails.setCity(jlocation.getString("city"));
 //                locationDetails.setCountry(jlocation.getString("country"));
 //                locationDetails.setCc(jlocation.getString("cc"));
-                locs.add(new Venue(jsonLocation.getString("id"), jsonLocation.getString("name"), address, locationDetails));
+                locs.add(new Venue(venues.getJSONObject(i).getString("id"), venues.getJSONObject(i).getString("name"), address, locationDetails));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-    }
-
-    private void Get_Conversations(String item) {
-        if (!item.isEmpty())
-
-            MesijiClient.get("/api/conversations/all/" + item, new AsyncHttpResponseHandler() {
-                @Override
-                public void onSuccess(String response) {
-                    InputStream is = new ByteArrayInputStream(response.getBytes());
-                    StringBuilder sb = new StringBuilder();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-                    try {
-                        for (String line; null != (line = reader.readLine()); ) {
-                            sb.append(line);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    String output = sb.toString();
-                    JSONObject json = null;
-                    JSONArray conversations = null;
-                    try {
-                        json = new JSONObject(output);
-                        conversations = json.getJSONObject("data").getJSONArray("json_data");
-//                        System.out.println(conversations);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            });
+        return locs;
     }
 
     public String getLatLng() {
+        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         String loc = null;
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
                     1000,
@@ -215,7 +190,7 @@ public class LocationActivity extends Activity {
                     new MyLocationListener());
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (location != null) {
-//                loc = location.getLatitude() + "/" + location.getLongitude();
+                loc = location.getLatitude() + "/" + location.getLongitude();
 //                Log.e(Constants.LOG, loc);
             } else {
                 // This has to be removed once basic version is deployable

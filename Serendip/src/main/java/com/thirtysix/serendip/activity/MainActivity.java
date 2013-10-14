@@ -8,12 +8,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.PersistentCookieStore;
-import com.thirtysix.serendip.AlertDialogManager;
 import com.thirtysix.serendip.Constants;
-import com.thirtysix.serendip.Locator;
 import com.thirtysix.serendip.R;
 import com.thirtysix.serendip.Register;
 import com.thirtysix.serendip.model.User;
@@ -27,28 +23,20 @@ import java.util.List;
 public class MainActivity extends Activity {
 
     public LocationManager locationManager;
-    AlertDialogManager alert;
-    AsyncHttpClient mesijiClient = new AsyncHttpClient();
     PersistentCookieStore mesijiCookieStore;
     User mesijiUser;
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        CheckForData();
-    }
-
-    @Override
-    protected void onRestart(){
-        super.onRestart();
-        CheckForData();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActionBar bar = getActionBar();
         bar.hide();
+        CheckForData();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
         CheckForData();
     }
 
@@ -68,7 +56,6 @@ public class MainActivity extends Activity {
         Log.e(Constants.LOG, String.valueOf(cookies.size()));
         for (Cookie c : cookies) {
             if (c.getName().equals("mesiji.userInfo")) {
-//                Log.e(Constants.LOG, "Cookie Stuff >>>>>>>>"+c.getName());
                 try {
                     JSONObject userJson = new JSONObject(c.getValue());
                     System.out.println("userJson: " + userJson.toString());

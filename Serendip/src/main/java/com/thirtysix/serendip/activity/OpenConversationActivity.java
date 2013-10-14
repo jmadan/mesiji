@@ -40,12 +40,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class OpenConversationActivity extends Activity {
 
     String con_id = null;
     String con_title = null;
-    ArrayList<Message> message_list = new ArrayList<Message>();
+    List<Message> messages;
     User mesijiUser;
     Conversation conversation;
 
@@ -61,20 +62,14 @@ public class OpenConversationActivity extends Activity {
         setContentView(R.layout.conversation_detail_view);
         ActionBar bar = getActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#006868")));
-        Intent intent = getIntent();
-        Bundle b = intent.getExtras();
-        if (b.isEmpty()) {
-            Log.e(Constants.LOG, "Selected Conversation is missing");
-            Intent homeIntent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(homeIntent);
-        } else {
-//            con_id = b.getString("conversation_id");
-//            con_title = b.getString("conversation_title");
-//            mesijiUser = b.getParcelable("user");
-            conversation = b.getParcelable("conversation");
-            TextView conTitle = (TextView) findViewById(R.id.con_title);
-            conTitle.setText(conversation.getTitle());
-            final ListView MESSAGE_LIST_VIEW = (ListView) findViewById(R.id.messages_list);
+        readIntent();
+        TextView conTitle = (TextView) findViewById(R.id.con_title);
+        conTitle.setText(conversation.getTitle());
+        final ListView MESSAGE_LIST_VIEW = (ListView) findViewById(R.id.messages_list);
+
+        messages = conversation.getMessages();
+        MessageAdaptor messageAdaptor = new MessageAdaptor(messages, getApplicationContext());
+        MESSAGE_LIST_VIEW.setAdapter(messageAdaptor);
 
 //            MesijiClient.get("/message/conversation/" + conversation.getId(), new AsyncHttpResponseHandler() {
 //                @Override
@@ -89,8 +84,20 @@ public class OpenConversationActivity extends Activity {
 //                }
 //            });
 
-        }
 
+
+    }
+
+    private void readIntent() {
+        Intent intent = getIntent();
+        Bundle b = intent.getExtras();
+        if (b.isEmpty()) {
+            Log.e(Constants.LOG, "Selected Conversation is missing");
+            Intent homeIntent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(homeIntent);
+        } else {
+            conversation = b.getParcelable("conversation");
+        }
     }
 
     private void getMessages(String response, ArrayList<Message> message_list) {

@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Conversation implements Parcelable{
 
@@ -15,9 +16,9 @@ public class Conversation implements Parcelable{
     public Date createdOn;
     public String[] circles;
     public User user;
-    public ArrayList<Message> messages;
+    public List<Message> messages;
 
-    public Conversation(String id, String title, Boolean isApproved, String[] circles, User user, ArrayList<Message> messages){
+    public Conversation(String id, String title, Boolean isApproved, String[] circles, User user, List<Message> messages){
         this.id = id;
         this.title = title;
         this.isApproved = isApproved;
@@ -26,11 +27,11 @@ public class Conversation implements Parcelable{
         this.messages = messages;
     }
 
-    public ArrayList<Message> getMessages() {
+    public List<Message> getMessages() {
         return messages;
     }
 
-    public void setMessages(ArrayList<Message> messages) {
+    public void setMessages(List<Message> messages) {
         this.messages = messages;
     }
 
@@ -124,11 +125,8 @@ public class Conversation implements Parcelable{
         id = parcel.readString();
         title = parcel.readString();
         creator = parcel.readString();
-        messages = parcel.readArrayList(Message.class.getClassLoader());
-        // readParcelable needs the ClassLoader
-        // but that can be picked up from the class
-        // This will solve the BadParcelableException
-        // because of ClassNotFoundException
+        messages = new ArrayList<Message>();
+        parcel.readTypedList(messages, Message.CREATOR);
         user = parcel.readParcelable(User.class.getClassLoader());
     }
 

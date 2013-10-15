@@ -63,13 +63,13 @@ public class OpenConversationActivity extends Activity {
         ActionBar bar = getActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#006868")));
         readIntent();
-        TextView conTitle = (TextView) findViewById(R.id.con_title);
-        conTitle.setText(conversation.getTitle());
-        final ListView MESSAGE_LIST_VIEW = (ListView) findViewById(R.id.messages_list);
-
-        messages = conversation.getMessages();
-        MessageAdaptor messageAdaptor = new MessageAdaptor(messages, getApplicationContext());
-        MESSAGE_LIST_VIEW.setAdapter(messageAdaptor);
+//        TextView conTitle = (TextView) findViewById(R.id.con_title);
+//        conTitle.setText(conversation.getTitle());
+//        final ListView MESSAGE_LIST_VIEW = (ListView) findViewById(R.id.messages_list);
+//
+//        messages = conversation.getMessages();
+//        MessageAdaptor messageAdaptor = new MessageAdaptor(messages, getApplicationContext());
+//        MESSAGE_LIST_VIEW.setAdapter(messageAdaptor);
 
 //            MesijiClient.get("/message/conversation/" + conversation.getId(), new AsyncHttpResponseHandler() {
 //                @Override
@@ -98,6 +98,7 @@ public class OpenConversationActivity extends Activity {
         } else {
             conversation = b.getParcelable("conversation");
         }
+        System.out.println("Parcelable Conversation>>>>>>>>>>"+conversation.getId() + conversation.getTitle()+conversation.user.getHandle());
     }
 
     private void getMessages(String response, ArrayList<Message> message_list) {

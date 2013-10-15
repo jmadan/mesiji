@@ -12,19 +12,28 @@ public class Conversation implements Parcelable{
     public String id;
     public String title;
     public String creator;
-    public Boolean isApproved;
+    public boolean isApproved;
     public Date createdOn;
     public String[] circles;
     public User user;
     public List<Message> messages;
 
     public Conversation(String id, String title, Boolean isApproved, User user, String[] circles, List<Message> messages){
+        super();
         this.id = id;
         this.title = title;
         this.isApproved = isApproved;
         this.circles = circles;
         this.user = user;
         this.messages = messages;
+    }
+
+    public Conversation(String id, String title, boolean isApproved, User user){
+        super();
+        this.id = id;
+        this.title = title;
+        this.isApproved = isApproved;
+        this.user = user;
     }
 
     public List<Message> getMessages() {
@@ -116,12 +125,6 @@ public class Conversation implements Parcelable{
     };
 
     private Conversation(Parcel parcel) {
-        readFromParcel(parcel);
-    }
-
-    private void readFromParcel(Parcel parcel) {
-
-        // The rest is the same as in ObjectA
         id = parcel.readString();
         title = parcel.readString();
         creator = parcel.readString();

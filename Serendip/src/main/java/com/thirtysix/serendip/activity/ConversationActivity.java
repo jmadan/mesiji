@@ -40,14 +40,13 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ConversationActivity extends Activity {
 
     Venue atVenue;
     AlertDialogManager alert;
-    User mesijiuser;
+    User mesijiUser, conversationStarter;
     List<Conversation> conversations = new ArrayList<Conversation>();
 
     @Override
@@ -76,7 +75,7 @@ public class ConversationActivity extends Activity {
             MesijiClient.get("/conversation/all/" + atVenue.getId().toString(), new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(String response) {
-                    conversations = GetConversations(response);
+                    conversations = GetConversationsFromResponse(response);
                     if (conversations.isEmpty()) {
                         setContentView(R.layout.create_conversation_view);
                     } else {
@@ -89,9 +88,6 @@ public class ConversationActivity extends Activity {
                                 Log.e(Constants.LOG, ">>>>>>>>>>"+selectedConversation.getTitle().toString());
                                 Intent intent = new Intent(getApplicationContext(), OpenConversationActivity.class);
                                 Bundle b = new Bundle();
-//                                b.putString("conversation_title", selectedConversation.getTitle());
-//                                b.putString("conversation_id", selectedConversation.getId());
-//                                b.putParcelable("user", mesijiuser);
                                 b.putParcelable("conversation", selectedConversation);
                                 intent.putExtras(b);
                                 startActivity(intent);
@@ -109,7 +105,7 @@ public class ConversationActivity extends Activity {
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
         atVenue = b.getParcelable("venueObj");
-        mesijiuser = b.getParcelable("user");
+        mesijiUser = b.getParcelable("user");
     }
 
     public void createConversation(View view) {
@@ -124,14 +120,14 @@ public class ConversationActivity extends Activity {
         try {
             //User JSON Object
             //{"_id":"522d8746156b5751b1000001","userid":100,"name":"Test User","email":"test@test.com","handle":"testuser","phone":"9008307311","relations":{"messages":null},"created_on":"0001-01-01T00:00:00Z"}
-            jsonUserObject.put("_id", mesijiuser.get_id().toString());
-            jsonUserObject.put("name", mesijiuser.getName().toString());
-            jsonUserObject.put("email", mesijiuser.getEmail().toString());
-            jsonUserObject.put("handle", mesijiuser.getHandle().toString());
+            jsonUserObject.put("_id", mesijiUser.get_id().toString());
+            jsonUserObject.put("name", mesijiUser.getName().toString());
+            jsonUserObject.put("email", mesijiUser.getEmail().toString());
+            jsonUserObject.put("handle", mesijiUser.getHandle().toString());
 
             //Message JSON Object
             jsonMessageObject.put("msg_text", msg.getText().toString());
-            jsonMessageObject.put("user_id", mesijiuser.get_id().toString());
+            jsonMessageObject.put("user_id", mesijiUser.get_id().toString());
             jsonMessagesObject.put(jsonMessageObject);
 
             //Venue JSON Object
@@ -161,7 +157,6 @@ public class ConversationActivity extends Activity {
         }catch (UnsupportedEncodingException e){
             e.printStackTrace();
         }
-//        final Intent intent = new Intent(this, LocationActivity.class);
         MesijiClient.post(getBaseContext(), "/conversation/", se, "application/json", new AsyncHttpResponseHandler() {
 
             @Override
@@ -175,10 +170,6 @@ public class ConversationActivity extends Activity {
                             finish();
                             startActivity(getIntent());
                         }
-//                        Intent intent = new Intent(getApplicationContext(), ConversationActivity.class);
-//                        Bundle b = new Bundle();
-//                        b.putParcelable("venueObj", atVenue);
-//                        intent.putExtras(b);
                     } else {
                         Log.e(Constants.LOG, ">>>>>>>>>>>>>>>"+res.getJSONObject("data").getString("error_msg").toString());
 //                        startActivity(intent);
@@ -227,7 +218,7 @@ public class ConversationActivity extends Activity {
         return status[0];
     }
 
-    private List<Conversation> GetConversations(String response) {
+    private List<Conversation> GetConversationsFromResponse(String response) {
         List<Conversation> chatter = new ArrayList<Conversation>();
         InputStream is = new ByteArrayInputStream(response.getBytes());
         StringBuilder sb = new StringBuilder();
@@ -256,23 +247,45 @@ public class ConversationActivity extends Activity {
                 if (jsonConversation.get("is_approved").toString().equals("true")){
                     JSONObject userObject = jsonConversation.getJSONObject("user");
                     List<Message> messages = GetMessages(jsonConversation);
+//                    chatter.add(new Conversation(
+//                            jsonConversation.getString("_id"),
+//                            jsonConversation.getString("title"),
+//                            jsonConversation.getBoolean("is_approved"),
+//                            new User(userObject.getString("_id"), userObject.getInt("userid"),
+//                                    userObject.getString("name"), userObject.getString("email"),
+//                                    userObject.getString("handle")),
+//                            new String[]{jsonConversation.getJSONArray("circles").toString()},
+//                            messages)
+//                            );
+                    conversationStarter = createUserFromJSON(userObject);
                     chatter.add(new Conversation(
                             jsonConversation.getString("_id"),
                             jsonConversation.getString("title"),
                             jsonConversation.getBoolean("is_approved"),
-                            new User(userObject.getString("_id"), userObject.getInt("userid"),
-                                    userObject.getString("name"), userObject.getString("email"),
-                                    userObject.getString("handle")),
-                            new String[]{jsonConversation.getJSONArray("circles").toString()},
-                            messages)
-                            );
+                            conversationStarter)
+                    );
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+        Log.e(Constants.LOG, ">>>>>>>>>"+chatter.toString());
 
         return chatter;
+    }
+
+    private User createUserFromJSON(JSONObject userObject) {
+        User tempUser = null;
+        try {
+            tempUser = new User(userObject.getString("_id"),
+                    userObject.getInt("userid"),
+                    userObject.getString("name"),
+                    userObject.getString("email"),
+                    userObject.getString("handle"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return tempUser;
     }
 
     private List<Message> GetMessages(JSONObject jsonConversation) {
@@ -284,24 +297,20 @@ public class ConversationActivity extends Activity {
             e.printStackTrace();
         }
         List<Message> messages = new ArrayList<Message>();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         Message m = new Message();
         for (int i=0; i<jsonMessages.length(); i++) {
             try {
-//                jsonMessage = jsonMessages.getJSONObject(i);
                 messages.add(i, new Message(jsonMessages.getJSONObject(i).getString("_id"),
                         jsonMessages.getJSONObject(i).getString("msg_text"),
                         jsonMessages.getJSONObject(i).getString("user_id"),
-                        simpleDateFormat.parse(jsonMessages.getJSONObject(i).getString("created-on"))));
-//                m.id = jsonMessage.getString("_id").toString();
-//                m.setMessage(jsonMessage.getString("msg_text"));
-//                m.setUserId(jsonMessage.getString("user_id"));
-////                m.setCreatedOn(JsonMessages.getJSONObject(i).getString("created_on"));
-//                messages.add(m);
-            } catch (JSONException e) {
+                        simpleDateFormat.parse(jsonMessages.getJSONObject(i).getString("created_on"))));
+            }
+            catch (JSONException e) {
                 e.printStackTrace();
-            } catch (ParseException e){
-
+            }
+            catch (ParseException e){
+                e.printStackTrace();
             }
         }
         return messages;

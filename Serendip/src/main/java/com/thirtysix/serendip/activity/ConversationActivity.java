@@ -21,6 +21,7 @@ import com.thirtysix.serendip.Constants;
 import com.thirtysix.serendip.ConversationAdaptor;
 import com.thirtysix.serendip.MesijiClient;
 import com.thirtysix.serendip.R;
+import com.thirtysix.serendip.Util.ISO8601DateParser;
 import com.thirtysix.serendip.model.Conversation;
 import com.thirtysix.serendip.model.Message;
 import com.thirtysix.serendip.model.User;
@@ -302,7 +303,7 @@ public class ConversationActivity extends Activity {
                 messages.add(i, new Message(jsonMessages.getJSONObject(i).getString("_id"),
                         jsonMessages.getJSONObject(i).getString("msg_text"),
                         jsonMessages.getJSONObject(i).getString("user_id"),
-                        simpleDateFormat.parse(jsonMessages.getJSONObject(i).getString("created_on"))));
+                        ISO8601DateParser.parse(jsonMessages.getJSONObject(i).getString("created_on"))));
             }
             catch (JSONException e) {
                 e.printStackTrace();

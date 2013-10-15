@@ -132,7 +132,8 @@ public class Conversation implements Parcelable{
 //        messages = parcel.readList(messages, Message.class.getClassLoader());
         messages = new ArrayList<Message>();
         parcel.readTypedList(messages, Message.CREATOR);
-        user = parcel.readParcelable(User.class.getClassLoader());
+        user = (User) parcel.readValue(getClass().getClassLoader());
+//        user = parcel.readParcelable(User.class.getClassLoader());
     }
 
 }

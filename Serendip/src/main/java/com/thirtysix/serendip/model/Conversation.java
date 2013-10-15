@@ -110,7 +110,8 @@ public class Conversation implements Parcelable{
         parcel.writeString(id);
         parcel.writeString(title);
         parcel.writeString(creator);
-        parcel.writeParcelable(user, i);
+        parcel.writeValue(user);
+//        parcel.writeList(messages);
         parcel.writeTypedList(messages);
     }
 
@@ -128,6 +129,7 @@ public class Conversation implements Parcelable{
         id = parcel.readString();
         title = parcel.readString();
         creator = parcel.readString();
+//        messages = parcel.readList(messages, Message.class.getClassLoader());
         messages = new ArrayList<Message>();
         parcel.readTypedList(messages, Message.CREATOR);
         user = parcel.readParcelable(User.class.getClassLoader());

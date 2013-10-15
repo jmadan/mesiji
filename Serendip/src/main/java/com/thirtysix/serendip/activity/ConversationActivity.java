@@ -247,23 +247,22 @@ public class ConversationActivity extends Activity {
                 if (jsonConversation.get("is_approved").toString().equals("true")){
                     JSONObject userObject = jsonConversation.getJSONObject("user");
                     List<Message> messages = GetMessages(jsonConversation);
-//                    chatter.add(new Conversation(
-//                            jsonConversation.getString("_id"),
-//                            jsonConversation.getString("title"),
-//                            jsonConversation.getBoolean("is_approved"),
-//                            new User(userObject.getString("_id"), userObject.getInt("userid"),
-//                                    userObject.getString("name"), userObject.getString("email"),
-//                                    userObject.getString("handle")),
-//                            new String[]{jsonConversation.getJSONArray("circles").toString()},
-//                            messages)
-//                            );
                     conversationStarter = createUserFromJSON(userObject);
                     chatter.add(new Conversation(
                             jsonConversation.getString("_id"),
                             jsonConversation.getString("title"),
                             jsonConversation.getBoolean("is_approved"),
-                            conversationStarter)
-                    );
+                            conversationStarter,
+                            new String[]{jsonConversation.getJSONArray("circles").toString()},
+                            messages)
+                            );
+
+//                    chatter.add(new Conversation(
+//                            jsonConversation.getString("_id"),
+//                            jsonConversation.getString("title"),
+//                            jsonConversation.getBoolean("is_approved"),
+//                            conversationStarter)
+//                    );
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -290,7 +289,6 @@ public class ConversationActivity extends Activity {
 
     private List<Message> GetMessages(JSONObject jsonConversation) {
         JSONArray jsonMessages = null;
-//        JSONObject jsonMessage = null;
         try{
             jsonMessages = jsonConversation.getJSONArray("messages");
         } catch (JSONException e){

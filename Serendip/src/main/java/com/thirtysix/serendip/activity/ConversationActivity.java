@@ -296,7 +296,7 @@ public class ConversationActivity extends Activity {
             e.printStackTrace();
         }
         List<Message> messages = new ArrayList<Message>();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         Message m = new Message();
         for (int i=0; i<jsonMessages.length(); i++) {
             try {

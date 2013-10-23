@@ -38,9 +38,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ConversationActivity extends Activity {
@@ -296,23 +298,35 @@ public class ConversationActivity extends Activity {
             e.printStackTrace();
         }
         List<Message> messages = new ArrayList<Message>();
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         Message m = new Message();
         for (int i=0; i<jsonMessages.length(); i++) {
             try {
                 messages.add(i, new Message(jsonMessages.getJSONObject(i).getString("_id"),
                         jsonMessages.getJSONObject(i).getString("msg_text"),
                         jsonMessages.getJSONObject(i).getString("user_id"),
-                        ISO8601DateParser.parse(jsonMessages.getJSONObject(i).getString("created_on"))));
+                        GetTime(jsonMessages.getJSONObject(i).get("created_on").toString())));
             }
             catch (JSONException e) {
                 e.printStackTrace();
             }
-            catch (ParseException e){
-                e.printStackTrace();
-            }
+//            catch (ParseException e){
+//                e.printStackTrace();
+//            }
         }
         return messages;
+    }
+
+    private Date GetTime(String created_on) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+//        SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date d = null;
+        try {
+            d = sdf.parse(created_on);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+//        String formattedTime = output.format(d);
+        return d;
     }
 
 }

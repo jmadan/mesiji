@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,8 +72,8 @@ public class LocationActivity extends Activity {
 
     private void ReadIntent() {
         Intent intent = getIntent();
-        Bundle b = intent.getExtras();
-        mesijiUser = b.getParcelable("user");
+//        Bundle b = intent.getExtras();
+        mesijiUser = (User) intent.getSerializableExtra("user");
         mesijiCookieStore = new PersistentCookieStore(getBaseContext());
     }
 
@@ -90,13 +91,14 @@ public class LocationActivity extends Activity {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             Venue v = (Venue) adapterView.getItemAtPosition(i);
-                            Intent intent = new Intent(getApplicationContext(), ConversationActivity.class);
-                            Bundle b = new Bundle();
+//                            Bundle b = new Bundle();
                             int lIndex = locationList.indexOf(v);
                             v.setLocationDetails(locationList.get(lIndex).locationDetails);
-                            b.putParcelable("venueObj", v);
-                            b.putParcelable("user", mesijiUser);
-                            intent.putExtras(b);
+                            Intent intent = new Intent(getApplicationContext(), ConversationActivity.class);
+                            intent.putExtra("venueObj", v);
+                            intent.putExtra("user", mesijiUser);
+//                            b.putParcelable("venueObj", v);
+//                            b.putParcelable("user", mesijiUser);
                             startActivity(intent);
                         }
                     });

@@ -63,83 +63,58 @@ public class OpenConversationActivity extends Activity {
         ActionBar bar = getActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#006868")));
         readIntent();
-//        TextView conTitle = (TextView) findViewById(R.id.con_title);
-//        conTitle.setText(conversation.getTitle());
-//        final ListView MESSAGE_LIST_VIEW = (ListView) findViewById(R.id.messages_list);
-//
-//        messages = conversation.getMessages();
-//        MessageAdaptor messageAdaptor = new MessageAdaptor(messages, getApplicationContext());
-//        MESSAGE_LIST_VIEW.setAdapter(messageAdaptor);
+        TextView conTitle = (TextView) findViewById(R.id.con_title);
+        conTitle.setText(conversation.getTitle());
+        final ListView MESSAGE_LIST_VIEW = (ListView) findViewById(R.id.messages_list);
 
-//            MesijiClient.get("/message/conversation/" + conversation.getId(), new AsyncHttpResponseHandler() {
-//                @Override
-//                public void onSuccess(String response) {
-//                    getMessages(response, message_list);
-//                    if (!message_list.isEmpty()) {
-//                        MessageAdaptor messageAdaptor = new MessageAdaptor(message_list, getApplicationContext());
-//                        MESSAGE_LIST_VIEW.setAdapter(messageAdaptor);
-//                    } else {
-//                        setContentView(R.layout.create_message);
-//                    }
-//                }
-//            });
-
-
+        messages = conversation.getMessages();
+        MessageAdaptor messageAdaptor = new MessageAdaptor(messages, getApplicationContext());
+        MESSAGE_LIST_VIEW.setAdapter(messageAdaptor);
 
     }
 
     private void readIntent() {
         Intent intent = getIntent();
-        Bundle b = intent.getExtras();
-        if (b.isEmpty()) {
-            Log.e(Constants.LOG, "Selected Conversation is missing");
-            Intent homeIntent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(homeIntent);
-        } else {
-            conversation = b.getParcelable("conversation");
-        }
-        System.out.println("Parcelable Conversation>>>>>>>>>>"+conversation.getId() + conversation.getTitle()+conversation.user.getHandle());
+        conversation = (Conversation)intent.getSerializableExtra("Conversation");
     }
 
-    private void getMessages(String response, ArrayList<Message> message_list) {
-        InputStream is = new ByteArrayInputStream(response.getBytes());
-        StringBuilder sb = new StringBuilder();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        try {
-            for (String line; null != (line = reader.readLine()); ) {
-                sb.append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String output = sb.toString();
-        JSONObject json = null;
-        JSONArray msgs = null;
-        try {
-            json = new JSONObject(output);
-            msgs = json.getJSONObject("data").getJSONObject("json_data").getJSONArray("messages");
-//            msgs = json.getJSONObject("data").getJSONArray("json_data");
-            System.out.println("I am here....LOOK FOR ME " + msgs.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        int i;
-        for (i = 0; i < msgs.length(); i++) {
-            try {
-                final JSONObject jsonMessage = msgs.getJSONObject(i);
-//                System.out.println(jsonMessage.get("msg_text").toString()+"----"+jsonMessage.get("user_id").toString());
-                message_list.add(new Message(jsonMessage.get("_id").toString(),
-                        jsonMessage.get("msg_text").toString(),
-                        jsonMessage.get("user_id").toString(),
-                        new SimpleDateFormat("MM/dd/yyy HH:MM:SS a").parse(jsonMessage.get("created_on").toString())));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    private void getMessages(String response, ArrayList<Message> message_list) {
+//        InputStream is = new ByteArrayInputStream(response.getBytes());
+//        StringBuilder sb = new StringBuilder();
+//        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+//        try {
+//            for (String line; null != (line = reader.readLine()); ) {
+//                sb.append(line);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        String output = sb.toString();
+//        JSONObject json = null;
+//        JSONArray msgs = null;
+//        try {
+//            json = new JSONObject(output);
+//            msgs = json.getJSONObject("data").getJSONObject("json_data").getJSONArray("messages");
+//            System.out.println("I am here....LOOK FOR ME " + msgs.toString());
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        int i;
+//        for (i = 0; i < msgs.length(); i++) {
+//            try {
+//                final JSONObject jsonMessage = msgs.getJSONObject(i);
+//                message_list.add(new Message(jsonMessage.get("_id").toString(),
+//                        jsonMessage.get("msg_text").toString(),
+//                        jsonMessage.get("user_id").toString(),
+//                        new SimpleDateFormat("MM/dd/yyy HH:MM:SS a").parse(jsonMessage.get("created_on").toString())));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     public void saveMessage(){
         Log.e(Constants.LOG, "trying to save a message!!!");
@@ -171,7 +146,7 @@ public class OpenConversationActivity extends Activity {
         }catch (UnsupportedEncodingException e){
             e.printStackTrace();
         }
-        MesijiClient.post(getBaseContext(), "/message/conversation/"+con_id, se, "application/json", new AsyncHttpResponseHandler() {
+        MesijiClient.post(getBaseContext(), "/message/conversation/"+conversation.getId(), se, "application/json", new AsyncHttpResponseHandler() {
 
             @Override
             public void onSuccess(String response) {
@@ -180,12 +155,13 @@ public class OpenConversationActivity extends Activity {
                     JSONObject res = new JSONObject(response);
                     Log.e(Constants.LOG, "json object of response: "+ res.toString());
                     if (res.getJSONObject("data").getString("status").toString().equals("201")) {
-                        Intent intent = new Intent(getApplicationContext(), OpenConversationActivity.class);
-                        Bundle b = new Bundle();
-                        b.putString("conversation_id", con_id);
-                        b.putString("conversation_title", con_title);
-                        intent.putExtras(b);
-                        startActivity(intent);
+                        Log.e(Constants.LOG, ">>>>>>>>>>>>>>>"+ res.getJSONObject("data").getString("jason_data").toString());
+//                        Intent intent = new Intent(getApplicationContext(), OpenConversationActivity.class);
+//                        Bundle b = new Bundle();
+//                        b.putString("conversation_id", con_id);
+//                        b.putString("conversation_title", con_title);
+//                        intent.putExtras(b);
+//                        startActivity(intent);
                     } else {
                         Log.e(Constants.LOG, res.getJSONObject("data").getString("error_msg").toString());
 //                        startActivity(intent);

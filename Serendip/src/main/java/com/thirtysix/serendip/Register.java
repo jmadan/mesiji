@@ -82,9 +82,9 @@ public class Register extends Activity {
                         mesijiCookie.setPath("/");
                         mesijiCookie.setVersion(1);
                         mesijiCookieStore.addCookie(mesijiCookie);
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelable("user", u[0]);
-                        intent.putExtras(bundle);
+//                        Bundle bundle = new Bundle();
+//                        bundle.putParcelable("user", u[0]);
+                        intent.putExtra("user", u[0]);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

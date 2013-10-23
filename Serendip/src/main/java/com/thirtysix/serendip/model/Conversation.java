@@ -3,11 +3,12 @@ package com.thirtysix.serendip.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Conversation implements Parcelable{
+public class Conversation implements Serializable{
 
     public String id;
     public String title;
@@ -18,22 +19,14 @@ public class Conversation implements Parcelable{
     public User user;
     public List<Message> messages;
 
-    public Conversation(String id, String title, Boolean isApproved, User user, String[] circles, List<Message> messages){
+    public Conversation(String id, String title, boolean isApproved, User user, String[] circles, List<Message> messages){
         super();
         this.id = id;
         this.title = title;
         this.isApproved = isApproved;
+        this.user = user;
         this.circles = circles;
-        this.user = user;
         this.messages = messages;
-    }
-
-    public Conversation(String id, String title, boolean isApproved, User user){
-        super();
-        this.id = id;
-        this.title = title;
-        this.isApproved = isApproved;
-        this.user = user;
     }
 
     public List<Message> getMessages() {
@@ -98,43 +91,6 @@ public class Conversation implements Parcelable{
 
     public void setUser(User user) {
         user = user;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(title);
-        parcel.writeString(creator);
-        parcel.writeValue(user);
-        parcel.writeParcelable(user, i);
-//        parcel.writeTypedList(messages);
-    }
-
-    public static final Parcelable.Creator<Conversation> CREATOR = new Parcelable.Creator<Conversation>() {
-        public Conversation createFromParcel(Parcel parcel) {
-            return new Conversation(parcel);
-        }
-
-        public Conversation[] newArray(int size) {
-            return new Conversation[size];
-        }
-    };
-
-    private Conversation(Parcel parcel) {
-        id = parcel.readString();
-        title = parcel.readString();
-        creator = parcel.readString();
-        messages = new ArrayList<Message>();
-        parcel.readTypedList(messages, Message.CREATOR);
-//        user = (User) parcel.readValue(getClass().getClassLoader());
-        User user = null;
-        user = parcel.readParcelable(User.class.getClassLoader());
-//        user = parcel.readParcelable(User.class.getClassLoader());
     }
 
 }

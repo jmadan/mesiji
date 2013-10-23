@@ -3,9 +3,10 @@ package com.thirtysix.serendip.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Message implements Parcelable {
+public class Message implements Serializable {
 
     public String id;
     public String message;
@@ -53,38 +54,38 @@ public class Message implements Parcelable {
         this.userId = userId;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(message);
-        parcel.writeString(userId);
-        parcel.writeString(id);
-        parcel.writeString(createdOn.toString());
-    }
-
-    public static final Parcelable.Creator<Message> CREATOR = new Parcelable.Creator<Message>() {
-        public Message createFromParcel(Parcel in) {
-            return new Message(in);
-        }
-
-        public Message[] newArray(int size) {
-            return new Message[size];
-        }
-    };
-
-    private Message(Parcel parcel) {
-        readFromParcel(parcel);
-    }
-
-    private void readFromParcel(Parcel parcel) {
-
-        // The rest is the same as in ObjectA
-        id = parcel.readString();
-        message = parcel.readString();
-        userId = parcel.readString();
-    }
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel parcel, int i) {
+//        parcel.writeString(message);
+//        parcel.writeString(userId);
+//        parcel.writeString(id);
+//        parcel.writeString(createdOn.toString());
+//    }
+//
+//    public static final Parcelable.Creator<Message> CREATOR = new Parcelable.Creator<Message>() {
+//        public Message createFromParcel(Parcel in) {
+//            return new Message(in);
+//        }
+//
+//        public Message[] newArray(int size) {
+//            return new Message[size];
+//        }
+//    };
+//
+//    private Message(Parcel parcel) {
+//        readFromParcel(parcel);
+//    }
+//
+//    private void readFromParcel(Parcel parcel) {
+//
+//        // The rest is the same as in ObjectA
+//        id = parcel.readString();
+//        message = parcel.readString();
+//        userId = parcel.readString();
+//    }
 }

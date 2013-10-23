@@ -3,7 +3,9 @@ package com.thirtysix.serendip.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class LocationDetails implements Parcelable{
+import java.io.Serializable;
+
+public class LocationDetails implements Serializable{
 
     String address;
     Double lat;
@@ -85,31 +87,31 @@ public class LocationDetails implements Parcelable{
         this.cc = cc;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeDouble(lat);
-        parcel.writeDouble(lng);
-    }
-
-    public static final Creator<LocationDetails> CREATOR
-            = new Creator<LocationDetails>() {
-        public LocationDetails createFromParcel(Parcel in) {
-            return new LocationDetails(in);
-        }
-
-        public LocationDetails[] newArray(int size) {
-            return new LocationDetails[size];
-        }
-    };
-
-    private LocationDetails(Parcel in) {
-//        mData = in.readInt();
-        lat = in.readDouble();
-        lng = in.readDouble();
-    }
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel parcel, int i) {
+//        parcel.writeDouble(lat);
+//        parcel.writeDouble(lng);
+//    }
+//
+//    public static final Creator<LocationDetails> CREATOR
+//            = new Creator<LocationDetails>() {
+//        public LocationDetails createFromParcel(Parcel in) {
+//            return new LocationDetails(in);
+//        }
+//
+//        public LocationDetails[] newArray(int size) {
+//            return new LocationDetails[size];
+//        }
+//    };
+//
+//    private LocationDetails(Parcel in) {
+////        mData = in.readInt();
+//        lat = in.readDouble();
+//        lng = in.readDouble();
+//    }
 }

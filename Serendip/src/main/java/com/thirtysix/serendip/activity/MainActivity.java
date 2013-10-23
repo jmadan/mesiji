@@ -72,9 +72,9 @@ public class MainActivity extends Activity {
     private void UserAlreadyLoggedIn(User user) {
         Log.e(Constants.LOG, user.getUserId().toString());
         final Intent intent = new Intent(this, LocationActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("user", user);
-        intent.putExtras(bundle);
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelable("user", user);
+        intent.putExtra("user", user);
         startActivity(intent);
     }
 

@@ -16,8 +16,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 
-public class User implements Parcelable {
+public class User implements Serializable {
 
     public String _id;
     public Integer userId;
@@ -66,44 +67,6 @@ public class User implements Parcelable {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(_id);
-        parcel.writeInt(userId);
-        parcel.writeString(name);
-        parcel.writeString(email);
-        parcel.writeString(handle);
-    }
-
-    public static final Creator<User> CREATOR
-            = new Creator<User>() {
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
-
-    private User(Parcel in) {
-        readFromParcel(in);
-    }
-
-    private void readFromParcel(Parcel in) {
-        _id = in.readString();
-        userId = in.readInt();
-        name = in.readString();
-        email = in.readString();
-        handle = in.readString();
-
     }
 
 

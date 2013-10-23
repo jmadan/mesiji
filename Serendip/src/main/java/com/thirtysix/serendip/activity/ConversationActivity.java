@@ -37,6 +37,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -90,9 +91,10 @@ public class ConversationActivity extends Activity {
                                 Conversation selectedConversation = (Conversation) adapterView.getItemAtPosition(i);
                                 Log.e(Constants.LOG, ">>>>>>>>>>"+selectedConversation.getTitle().toString());
                                 Intent intent = new Intent(getApplicationContext(), OpenConversationActivity.class);
-                                Bundle b = new Bundle();
-                                b.putParcelable("conversation", selectedConversation);
-                                intent.putExtras(b);
+                                intent.putExtra("Conversation", selectedConversation);
+//                                Bundle b = new Bundle();
+//                                b.putParcelable("conversation", selectedConversation);
+//                                intent.putExtras(b);
                                 startActivity(intent);
                             }
                         });
@@ -106,9 +108,11 @@ public class ConversationActivity extends Activity {
 
     private void ReadIntent() {
         Intent intent = getIntent();
-        Bundle b = intent.getExtras();
-        atVenue = b.getParcelable("venueObj");
-        mesijiUser = b.getParcelable("user");
+//        Bundle b = intent.getExtras();
+//        atVenue = b.getParcelable("venueObj");
+//        mesijiUser = b.getParcelable("user");
+        atVenue = (Venue) intent.getSerializableExtra("venueObj");
+        mesijiUser = (User) intent.getSerializableExtra("user");
     }
 
     public void createConversation(View view) {

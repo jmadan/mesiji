@@ -35,9 +35,17 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void onResume(){
+    public void onResume(){
         super.onResume();
         CheckForData();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(locationManager != null){
+            locationManager = null;
+        }
     }
 
     private void CheckForData() {
@@ -72,8 +80,6 @@ public class MainActivity extends Activity {
     private void UserAlreadyLoggedIn(User user) {
         Log.e(Constants.LOG, user.getUserId().toString());
         final Intent intent = new Intent(this, LocationActivity.class);
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelable("user", user);
         intent.putExtra("user", user);
         startActivity(intent);
     }

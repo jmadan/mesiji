@@ -1,47 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:orientation="horizontal"
-                android:padding="5dip"
-                android:layout_margin="10dp"
-                >
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:orientation="horizontal"
+    android:padding="5dip"
+    android:layout_margin="10dp">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:padding="10dp"
-              >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
 
-    <TextView
+        <TextView
             style="@style/HeadingStyle"
             android:text="@string/create_conversation_heading"
-            android:id="@+id/con_heading"/>
+            android:id="@+id/con_heading" />
 
-    <EditText
+        <EditText
             style="@style/TextEditStyle"
             android:id="@+id/conversation_title"
             android:hint="Title">
 
-    <requestFocus />
-    </EditText>
+            <requestFocus />
+        </EditText>
 
-    <EditText
+        <EditText
             style="@style/MultiLineText"
             android:inputType="textMultiLine"
             android:id="@+id/message"
             android:hint=""
             android:background="@drawable/border"
-            android:cursorVisible="true"/>
+            android:cursorVisible="true" />
 
-    <Button
+        <Button
             android:text="Postit"
             android:id="@+id/save_conversation"
             android:onClick="createConversation"
-            style="@style/ButtonStyle"
-            />
+            style="@style/ButtonStyle" />
 
-</LinearLayout>
+    </LinearLayout>
 </RelativeLayout>

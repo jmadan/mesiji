@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@drawable/city"
-              android:gravity="bottom">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/city"
+    android:gravity="bottom">
 
-    <Button style="@style/ButtonStyle"
-            android:id="@+id/start_login"
-            android:text="@string/start_login"
-            android:onClick="ShowLogin"
-            />
+    <Button
+        style="@style/ButtonStyle"
+        android:id="@+id/start_login"
+        android:text="@string/start_login"
+        android:onClick="ShowLogin" />
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Or"
-            android:id="@+id/orTextView"
-            android:layout_gravity="center"
-            android:textSize="20dp"
-            android:gravity="center_horizontal"
-            android:textColor="#ffffff"
-            />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Or"
+        android:id="@+id/orTextView"
+        android:layout_gravity="center"
+        android:textSize="20dp"
+        android:gravity="center_horizontal"
+        android:textColor="#ffffff" />
 
-    <Button style="@style/ButtonStyle"
-            android:id="@+id/start_register"
-            android:text="@string/start_register"
-            android:onClick="ShowRegister"/>
+    <Button
+        style="@style/ButtonStyle"
+        android:id="@+id/start_register"
+        android:text="@string/start_register"
+        android:onClick="ShowRegister" />
 
 </LinearLayout>

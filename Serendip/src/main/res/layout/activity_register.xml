@@ -6,18 +6,18 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".Register" >
+    tools:context=".Register">
 
     <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="54dp"
-            android:text="@string/register_heading"
-            android:id="@+id/register_textview"
-            android:layout_gravity="center"
-            android:textColor="@color/text_heading"
-            android:textStyle="italic"
-            android:textSize="30dp"
-            android:gravity="center"/>
+        android:layout_width="fill_parent"
+        android:layout_height="54dp"
+        android:text="@string/register_heading"
+        android:id="@+id/register_textview"
+        android:layout_gravity="center"
+        android:textColor="@color/text_heading"
+        android:textStyle="italic"
+        android:textSize="30dp"
+        android:gravity="center" />
 
     <EditText
         android:id="@+id/handle"
@@ -28,7 +28,8 @@
         android:ems="10"
         android:hint="Alias"
         android:textStyle="italic">
-    <requestFocus />
+
+        <requestFocus />
     </EditText>
 
     <EditText
@@ -40,8 +41,7 @@
         android:ems="10"
         android:hint="Name"
         android:layout_centerHorizontal="true"
-        android:textStyle="italic">
-    </EditText>
+        android:textStyle="italic"></EditText>
 
     <EditText
         android:id="@+id/email"
@@ -53,26 +53,25 @@
         android:hint="Email"
         android:inputType="textEmailAddress"
         android:layout_centerHorizontal="true"
-        android:textStyle="italic"/>
+        android:textStyle="italic" />
 
     <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:ems="10"
-            android:id="@+id/password"
-            android:layout_below="@+id/email"
-            android:layout_marginTop="20dp"
-            android:layout_centerHorizontal="true"
-            android:hint="Password"
-            android:textStyle="italic" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/password"
+        android:layout_below="@+id/email"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:hint="Password"
+        android:textStyle="italic" />
 
     <Button
-            style="@style/ButtonStyle"
-            android:id="@+id/register_button"
-            android:layout_below="@id/password"
-            android:text="Register"
-            android:onClick="signUp"
-            />
+        style="@style/ButtonStyle"
+        android:id="@+id/register_button"
+        android:layout_below="@id/password"
+        android:text="Register"
+        android:onClick="signUp" />
 
 </RelativeLayout>

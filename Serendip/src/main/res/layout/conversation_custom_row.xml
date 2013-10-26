@@ -9,18 +9,18 @@
         android:id="@+id/con_thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="1dip"
+        android:padding="2dip"
         android:layout_alignParentLeft="true"
-        android:layout_marginRight="2dip"
+        android:layout_marginRight="3dip"
         android:layout_centerVertical="true">
 
 
         <ImageView
             android:id="@+id/loc_image"
-            android:layout_width="30dip"
-            android:layout_height="30dip"
+            android:layout_width="26dip"
+            android:layout_height="26dip"
             android:src="@drawable/megaphone_icon"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true" />
 
     </LinearLayout>
 
@@ -35,7 +35,7 @@
         android:typeface="sans"
         android:textSize="15dip"
         android:textStyle="bold"
-        android:drawableRight="@drawable/star"/>
+        android:drawableRight="@drawable/star" />
 
     <TextView
         android:id="@+id/conversation_user"
@@ -43,10 +43,10 @@
         android:layout_below="@+id/conversation_title"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_centerVertical="true"
         android:textSize="12dip"
+        android:textStyle="italic"
+        android:textAlignment="viewEnd"
         android:layout_margin="2dip"
-        android:textColor="@color/text_sub"
-        />
+        android:textColor="@color/text_sub" />
 
 </RelativeLayout>

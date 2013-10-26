@@ -11,12 +11,15 @@ public class Message implements Serializable {
     public String id;
     public String message;
     public String userId;
-    public Date createdOn;
 
-    public Message(String id, String msg, String userId, Date createdOn){
+    public String userHandle;
+
+    public Date createdOn;
+    public Message(String id, String msg, String userId, String userHandle,Date createdOn){
         this.id = id;
         this.message = msg;
         this.userId = userId;
+        this.userHandle = userHandle;
         this.createdOn = createdOn;
     }
 
@@ -24,6 +27,14 @@ public class Message implements Serializable {
 
     public String getId() {
         return id;
+    }
+
+    public String getUserHandle() {
+        return userHandle;
+    }
+
+    public void setUserHandle(String userHandle) {
+        this.userHandle = userHandle;
     }
 
     public Date getCreatedOn() {

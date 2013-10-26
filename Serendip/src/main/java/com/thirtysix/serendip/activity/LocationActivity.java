@@ -47,6 +47,7 @@ public class LocationActivity extends Activity {
     AlertDialogManager alert;
     PersistentCookieStore mesijiCookieStore;
     User mesijiUser;
+    String latlng = null;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -62,24 +63,32 @@ public class LocationActivity extends Activity {
         ActionBar bar = getActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#006868")));
         ReadIntent();
+        latlng = getLatLng();
         ShowLocationListView();
     }
 
     @Override
     public void onResume(){
         super.onResume();
+        latlng = getLatLng();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        if (latlng != null){
+            latlng = null;
+        }
     }
 
     private void ReadIntent() {
         Intent intent = getIntent();
-//        Bundle b = intent.getExtras();
         mesijiUser = (User) intent.getSerializableExtra("user");
         mesijiCookieStore = new PersistentCookieStore(getBaseContext());
     }
 
     private void ShowLocationListView() {
         final ListView LOCATION_LIST_VIEW = (ListView) findViewById(R.id.location_list);
-        String latlng = getLatLng();
         if (latlng != null) {
             MesijiClient.get("/location/coordinates/" + latlng, new AsyncHttpResponseHandler() {
                 @Override
@@ -91,21 +100,18 @@ public class LocationActivity extends Activity {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             Venue v = (Venue) adapterView.getItemAtPosition(i);
-//                            Bundle b = new Bundle();
                             int lIndex = locationList.indexOf(v);
                             v.setLocationDetails(locationList.get(lIndex).locationDetails);
                             Intent intent = new Intent(getApplicationContext(), ConversationActivity.class);
                             intent.putExtra("venueObj", v);
                             intent.putExtra("user", mesijiUser);
-//                            b.putParcelable("venueObj", v);
-//                            b.putParcelable("user", mesijiUser);
                             startActivity(intent);
                         }
                     });
                 }
             });
         } else {
-//            alert.showAlertDialog(context, "Location Error", "Could not determine Venue...Please try again.");
+            alert.showAlertDialog(getApplicationContext(), "Location Error", "Could not determine Venue...Please try again.");
             Log.e(Constants.LOG, "Could not determine Venue...Please try again.");
         }
     }
@@ -185,18 +191,14 @@ public class LocationActivity extends Activity {
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         String loc = null;
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    1000,
-                    1,
-                    new MyLocationListener());
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, new MyLocationListener());
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (location != null) {
                 loc = location.getLatitude() + "/" + location.getLongitude();
-//                Log.e(Constants.LOG, loc);
+                Log.e(Constants.LOG, loc);
             } else {
                 // This has to be removed once basic version is deployable
-                loc = "53.484601/-2.237296";
+//                loc = "53.484601/-2.237296";
                 Log.e(Constants.LOG, "No Venue");
             }
         }
@@ -215,19 +217,19 @@ public class LocationActivity extends Activity {
 
         public void onStatusChanged(String s, int i, Bundle b) {
             Toast.makeText(LocationActivity.this, "Provider status changed",
-                    Toast.LENGTH_LONG).show();
+                    Toast.LENGTH_SHORT).show();
         }
 
         public void onProviderDisabled(String s) {
             Toast.makeText(LocationActivity.this,
                     "Provider disabled by the user. GPS turned off",
-                    Toast.LENGTH_LONG).show();
+                    Toast.LENGTH_SHORT).show();
         }
 
         public void onProviderEnabled(String s) {
             Toast.makeText(LocationActivity.this,
                     "Provider enabled by the user. GPS turned on",
-                    Toast.LENGTH_LONG).show();
+                    Toast.LENGTH_SHORT).show();
         }
     }
 }

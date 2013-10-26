@@ -92,9 +92,6 @@ public class ConversationActivity extends Activity {
                                 Log.e(Constants.LOG, ">>>>>>>>>>"+selectedConversation.getTitle().toString());
                                 Intent intent = new Intent(getApplicationContext(), OpenConversationActivity.class);
                                 intent.putExtra("Conversation", selectedConversation);
-//                                Bundle b = new Bundle();
-//                                b.putParcelable("conversation", selectedConversation);
-//                                intent.putExtras(b);
                                 startActivity(intent);
                             }
                         });
@@ -108,9 +105,6 @@ public class ConversationActivity extends Activity {
 
     private void ReadIntent() {
         Intent intent = getIntent();
-//        Bundle b = intent.getExtras();
-//        atVenue = b.getParcelable("venueObj");
-//        mesijiUser = b.getParcelable("user");
         atVenue = (Venue) intent.getSerializableExtra("venueObj");
         mesijiUser = (User) intent.getSerializableExtra("user");
     }
@@ -308,14 +302,12 @@ public class ConversationActivity extends Activity {
                 messages.add(i, new Message(jsonMessages.getJSONObject(i).getString("_id"),
                         jsonMessages.getJSONObject(i).getString("msg_text"),
                         jsonMessages.getJSONObject(i).getString("user_id"),
+                        jsonMessages.getJSONObject(i).getString("user_handle"),
                         GetTime(jsonMessages.getJSONObject(i).get("created_on").toString())));
             }
             catch (JSONException e) {
                 e.printStackTrace();
             }
-//            catch (ParseException e){
-//                e.printStackTrace();
-//            }
         }
         return messages;
     }

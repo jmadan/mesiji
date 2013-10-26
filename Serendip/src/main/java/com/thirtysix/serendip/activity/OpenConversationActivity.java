@@ -44,7 +44,6 @@ import java.util.List;
 
 public class OpenConversationActivity extends Activity {
 
-    String con_id = null;
     String con_title = null;
     List<Message> messages;
     User mesijiUser;
@@ -63,14 +62,7 @@ public class OpenConversationActivity extends Activity {
         ActionBar bar = getActionBar();
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#006868")));
         readIntent();
-        TextView conTitle = (TextView) findViewById(R.id.con_title);
-        conTitle.setText(conversation.getTitle());
-        final ListView MESSAGE_LIST_VIEW = (ListView) findViewById(R.id.messages_list);
-
-        messages = conversation.getMessages();
-        MessageAdaptor messageAdaptor = new MessageAdaptor(messages, getApplicationContext());
-        MESSAGE_LIST_VIEW.setAdapter(messageAdaptor);
-
+        ShowMessages();
     }
 
     private void readIntent() {
@@ -78,43 +70,15 @@ public class OpenConversationActivity extends Activity {
         conversation = (Conversation)intent.getSerializableExtra("Conversation");
     }
 
-//    private void getMessages(String response, ArrayList<Message> message_list) {
-//        InputStream is = new ByteArrayInputStream(response.getBytes());
-//        StringBuilder sb = new StringBuilder();
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-//        try {
-//            for (String line; null != (line = reader.readLine()); ) {
-//                sb.append(line);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        String output = sb.toString();
-//        JSONObject json = null;
-//        JSONArray msgs = null;
-//        try {
-//            json = new JSONObject(output);
-//            msgs = json.getJSONObject("data").getJSONObject("json_data").getJSONArray("messages");
-//            System.out.println("I am here....LOOK FOR ME " + msgs.toString());
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        int i;
-//        for (i = 0; i < msgs.length(); i++) {
-//            try {
-//                final JSONObject jsonMessage = msgs.getJSONObject(i);
-//                message_list.add(new Message(jsonMessage.get("_id").toString(),
-//                        jsonMessage.get("msg_text").toString(),
-//                        jsonMessage.get("user_id").toString(),
-//                        new SimpleDateFormat("MM/dd/yyy HH:MM:SS a").parse(jsonMessage.get("created_on").toString())));
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+    private void ShowMessages() {
+        TextView conTitle = (TextView) findViewById(R.id.con_title);
+        conTitle.setText(conversation.getTitle());
+        final ListView MESSAGE_LIST_VIEW = (ListView) findViewById(R.id.messages_list);
+
+        messages = conversation.getMessages();
+        MessageAdaptor messageAdaptor = new MessageAdaptor(messages, getApplicationContext());
+        MESSAGE_LIST_VIEW.setAdapter(messageAdaptor);
+    }
 
     public void saveMessage(){
         Log.e(Constants.LOG, "trying to save a message!!!");
@@ -132,6 +96,7 @@ public class OpenConversationActivity extends Activity {
             //Message JSON Object
             jsonMessageObject.put("msg_text", msg_text.getText().toString());
             jsonMessageObject.put("user_id", mesijiUser.get_id());
+            jsonMessageObject.put("user_handle", mesijiUser.getHandle());
             jsonMessagesObject.put(jsonMessageObject);
         } catch (Exception e) {
             Log.e(Constants.LOG, e.toString());
@@ -155,7 +120,9 @@ public class OpenConversationActivity extends Activity {
                     JSONObject res = new JSONObject(response);
                     Log.e(Constants.LOG, "json object of response: "+ res.toString());
                     if (res.getJSONObject("data").getString("status").toString().equals("201")) {
-                        Log.e(Constants.LOG, ">>>>>>>>>>>>>>>"+ res.getJSONObject("data").getString("jason_data").toString());
+                        Log.e(Constants.LOG, ">>>>>>>>>>>>>>>"+ res.getJSONObject("data").getString("json_data").toString());
+
+//                        ShowMessages();
 //                        Intent intent = new Intent(getApplicationContext(), OpenConversationActivity.class);
 //                        Bundle b = new Bundle();
 //                        b.putString("conversation_id", con_id);

@@ -47,8 +47,7 @@ public class ConversationAdaptor extends BaseAdapter{
         TextView convUser = (TextView) v.findViewById(R.id.conversation_user);
         Conversation cons = _data.get(i);
         convTitle.setText(cons.getTitle());
-//        convUser.setText(cons.getUser().getHandle().toString());
-
+        convUser.setText(cons.getUser().getHandle().toString());
         return v;
     }
 

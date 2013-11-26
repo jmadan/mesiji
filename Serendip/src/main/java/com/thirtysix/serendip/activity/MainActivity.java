@@ -4,10 +4,15 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
+
 import com.loopj.android.http.PersistentCookieStore;
 import com.thirtysix.serendip.Constants;
 import com.thirtysix.serendip.R;
@@ -25,6 +30,8 @@ public class MainActivity extends Activity {
     public LocationManager locationManager;
     PersistentCookieStore mesijiCookieStore;
     User mesijiUser;
+
+    private static long back_pressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +56,30 @@ public class MainActivity extends Activity {
     }
 
     private void CheckForData() {
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            CheckUserState();
-        } else {
+
+        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+        List<String> providers = locationManager.getProviders(true);
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || mWifi.isConnected() || locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
             setContentView(R.layout.nodata);
+        } else{
+            CheckUserState();
         }
+
+//        for (int i=providers.size()-1; i>=0; i--) {
+//            l = locationManager.getLastKnownLocation(providers.get(i));
+//            if (l != null) break;
+//        }
+
+//        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+//                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+//            CheckUserState();
+//        } else {
+//
+//        }
     }
 
     private void CheckUserState() {
@@ -92,6 +116,14 @@ public class MainActivity extends Activity {
     public void ShowRegister(View view) {
         Intent intent = new Intent(this, Register.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (back_pressed + 2000 > System.currentTimeMillis()) super.onBackPressed();
+        else Toast.makeText(getBaseContext(), "Press once again to exit!", Toast.LENGTH_SHORT).show();
+        back_pressed = System.currentTimeMillis();
     }
 
 }

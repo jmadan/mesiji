@@ -52,16 +52,16 @@ public class LoginActivity extends Activity {
 
         forgotPass.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
-
+                Log.e(Constants.LOG, "Forgot password it is");
             }
         });
-//        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//        final boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-//        final boolean wifiEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-//        if (!gpsEnabled && !wifiEnabled) {
-//            Log.e(Constants.LOG, "Network is not available");
-//            setContentView(R.layout.no_network);
-//        }
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        final boolean gpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        final boolean wifiEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        if (!gpsEnabled && !wifiEnabled) {
+            Log.e(Constants.LOG, "Network is not available");
+            setContentView(R.layout.nodata);
+        }
     }
 
     @Override

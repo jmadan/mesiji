@@ -13,7 +13,7 @@ public class AlertDialogManager {
     }
 
     public void showAlertDialog(Context context, String title, String message) {
-//        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        AlertDialog.Builder alert = new AlertDialog.Builder(context);
         alert.setTitle(title);
         alert.setMessage(message);
         alert.setCancelable(true);

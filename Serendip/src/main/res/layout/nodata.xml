@@ -12,12 +12,12 @@
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="You must\nturn on Data"
+        android:text="Oops! seems like\n you are not connected\n to the Internet."
         android:id="@+id/noDataView"
         android:layout_gravity="center"
         android:textSize="30dp"
-        android:textStyle="bold"
+        android:textStyle="italic"
         android:gravity="center_vertical"
-        android:textColor="#990900" />
+        android:textColor="#990033" />
 
 </RelativeLayout>

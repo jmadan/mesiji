@@ -58,7 +58,6 @@ public class MainActivity extends Activity {
     private void CheckForData() {
 
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-        List<String> providers = locationManager.getProviders(true);
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
@@ -67,19 +66,6 @@ public class MainActivity extends Activity {
         } else{
             CheckUserState();
         }
-
-//        for (int i=providers.size()-1; i>=0; i--) {
-//            l = locationManager.getLastKnownLocation(providers.get(i));
-//            if (l != null) break;
-//        }
-
-//        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-//                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-//            CheckUserState();
-//        } else {
-//
-//        }
     }
 
     private void CheckUserState() {

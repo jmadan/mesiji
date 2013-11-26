@@ -64,7 +64,7 @@ public class LocationActivity extends Activity {
         bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#006868")));
         ReadIntent();
         latlng = getLatLng();
-        ShowLocationListView();
+        ShowLocationListView(latlng);
     }
 
     @Override
@@ -76,9 +76,12 @@ public class LocationActivity extends Activity {
     @Override
     public void onPause(){
         super.onPause();
-        if (latlng != null){
-            latlng = null;
-        }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
     }
 
     private void ReadIntent() {
@@ -87,7 +90,7 @@ public class LocationActivity extends Activity {
         mesijiCookieStore = new PersistentCookieStore(getBaseContext());
     }
 
-    private void ShowLocationListView() {
+    private void ShowLocationListView(String latlng) {
         final ListView LOCATION_LIST_VIEW = (ListView) findViewById(R.id.location_list);
         if (latlng != null) {
             MesijiClient.get("/location/coordinates/" + latlng, new AsyncHttpResponseHandler() {
@@ -123,7 +126,7 @@ public class LocationActivity extends Activity {
             logoutUser();
             return true;
         } else if (i == R.id.refresh) {
-            ShowLocationListView();
+            ShowLocationListView(latlng);
             return true;
         } else if (i == R.id.search) {
             return true;
@@ -190,46 +193,19 @@ public class LocationActivity extends Activity {
     public String getLatLng() {
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         String loc = null;
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, new MyLocationListener());
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (location != null) {
-                loc = location.getLatitude() + "/" + location.getLongitude();
-                Log.e(Constants.LOG, loc);
-            } else {
-                // This has to be removed once basic version is deployable
-//                loc = "53.484601/-2.237296";
-                Log.e(Constants.LOG, "No Venue");
-            }
+        List<String> providers = locationManager.getProviders(true);
+
+        Location l = null;
+
+        for (int i=providers.size()-1; i>=0; i--) {
+            l = locationManager.getLastKnownLocation(providers.get(i));
+            if (l != null) break;
+        }
+
+        if (l != null) {
+            loc = l.getLatitude() + "/" + l.getLongitude();
         }
         return loc;
     }
 
-    private class MyLocationListener implements LocationListener {
-
-        public void onLocationChanged(Location location) {
-            String message = String.format(
-                    "New Venue \n Longitude: %1$s \n Latitude: %2$s",
-                    location.getLongitude(), location.getLatitude()
-            );
-//            Toast.makeText(LocationActivity.this, message, Toast.LENGTH_LONG).show();
-        }
-
-        public void onStatusChanged(String s, int i, Bundle b) {
-            Toast.makeText(LocationActivity.this, "Provider status changed",
-                    Toast.LENGTH_SHORT).show();
-        }
-
-        public void onProviderDisabled(String s) {
-            Toast.makeText(LocationActivity.this,
-                    "Provider disabled by the user. GPS turned off",
-                    Toast.LENGTH_SHORT).show();
-        }
-
-        public void onProviderEnabled(String s) {
-            Toast.makeText(LocationActivity.this,
-                    "Provider enabled by the user. GPS turned on",
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
 }

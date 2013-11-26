@@ -59,12 +59,13 @@ public class MainActivity extends Activity {
 
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+//        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || mWifi.isConnected() || locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            setContentView(R.layout.nodata);
-        } else{
+//        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || mWifi.isConnected() || locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
             CheckUserState();
+        } else{
+            setContentView(R.layout.nodata);
         }
     }
 

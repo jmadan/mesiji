@@ -11,6 +11,7 @@ import java.util.List;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -48,6 +49,7 @@ public class LocationActivity extends Activity {
     PersistentCookieStore mesijiCookieStore;
     User mesijiUser;
     String latlng = null;
+    private static long back_pressed;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,7 +83,13 @@ public class LocationActivity extends Activity {
     @Override
     public void onBackPressed()
     {
-        super.onBackPressed();
+        if (back_pressed + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+        }
+        else {
+            Toast.makeText(getBaseContext(), "Press once again to exit!", Toast.LENGTH_SHORT).show();
+        }
+        back_pressed = System.currentTimeMillis();
     }
 
     private void ReadIntent() {

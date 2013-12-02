@@ -30,7 +30,6 @@ public class MainActivity extends Activity {
     public LocationManager locationManager;
     PersistentCookieStore mesijiCookieStore;
     User mesijiUser;
-
     private static long back_pressed;
 
     @Override
@@ -56,11 +55,9 @@ public class MainActivity extends Activity {
     }
 
     private void CheckForData() {
-
         locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 //        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
 //        if(locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || mWifi.isConnected() || locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
         if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
             CheckUserState();
@@ -93,6 +90,7 @@ public class MainActivity extends Activity {
         final Intent intent = new Intent(this, LocationActivity.class);
         intent.putExtra("user", user);
         startActivity(intent);
+        finish();
     }
 
     public void ShowLogin(View view){
@@ -112,5 +110,4 @@ public class MainActivity extends Activity {
         else Toast.makeText(getBaseContext(), "Press once again to exit!", Toast.LENGTH_SHORT).show();
         back_pressed = System.currentTimeMillis();
     }
-
 }

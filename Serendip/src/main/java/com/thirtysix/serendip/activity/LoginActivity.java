@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -39,6 +40,7 @@ public class LoginActivity extends Activity {
     AsyncHttpClient mesijiClient = new AsyncHttpClient();
     PersistentCookieStore mesijiCookieStore;
     User mesijiUser;
+    Uri uriUrl = Uri.parse("http://www.happenstance.me/forgot");
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -52,7 +54,8 @@ public class LoginActivity extends Activity {
 
         forgotPass.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
-                Log.e(Constants.LOG, "Forgot password it is");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uriUrl);
+                startActivity(intent);
             }
         });
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -120,8 +123,6 @@ public class LoginActivity extends Activity {
                 try {
                     JSONObject res = new JSONObject(response);
                     if (res.get("userid").toString().equals("0")) {
-//                        Toast toast = Toast.makeText(getBaseContext(), "Invalid Username/Password combination", 3000);
-//                        toast.show();
                         alert = new AlertDialogManager(getApplicationContext());
                         alert.showAlertDialog(LoginActivity.this, "Login failed...", "Username/Password is incorrect");
                     } else {
@@ -131,19 +132,13 @@ public class LoginActivity extends Activity {
                         mesijiCookie.setPath("/");
                         mesijiCookie.setVersion(1);
                         mesijiCookieStore.addCookie(mesijiCookie);
-//                        Bundle bundle = new Bundle();
-//                        bundle.putParcelable("user", u[0]);
                         intent.putExtra("user", u[0]);
+                        startActivity(intent);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                startActivity(intent);
             }
         });
-    }
-
-    public void ForgotPassword(View view){
-        System.out.println("hello there...I m here to remind u of ur password");
     }
 }
